@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
+
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -18,4 +20,203 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+} */
+
+
+:root {
+  --foreground: #3C3C4399;
+  --background: #F2F2F7FF;
+  --gradient-nav: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(30, 30, 30, 0.9) 50%, rgba(0, 0, 0, 1) 100%);
+  --link: #5AC8FAFF;
+  --blur-rgb: 0, 0, 0;
+  --game-text: #FFD700FF;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground: #EBEBF599;
+    --background: #1C1C1EFF;
+    --gradient-nav: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 245, 0.9) 50%, rgba(255, 255, 255, 1) 100%);
+    --link: #64D2FFFF;
+    --blur-rgb: 255, 255, 255;
+    --game-text: #FFC107FF;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Press Start 2P", serif;
+}
+
+body {
+  color: var(--foreground);
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--background)
+    )
+    var(--background);
+  margin: 0;
+  --muted-text-rgb: 176, 176, 176;
+  --highlight-gradient: linear-gradient(to right, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
+  --violet-rgb: 160, 122, 170;
+}
+
+/* Your existing styles */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+a {
+  text-decoration: none;
+} 
+
+.header-background {
+  position: absolute;
+  width: 100%;
+  height: 320px;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.not-found,
+.error {
+  margin-top: 5rem;
+  text-align: center;
+}
+
+.not-found h1,
+.error h1 {
+  font-size: 5rem;
+  margin: 0px;
+  font-weight: 900;
+  text-transform: uppercase;
+  background-size: cover;
+  background-position: center;
+  font-family: "Press Start 2P", serif;
+
+}
+
+.not-found p,
+.error p {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+/* Game specific styles */
+@keyframes scroll {
+  0% {
+    transform: translateY(100vh) rotateX(20deg);
+  }
+  100% {
+    transform: translateY(-200vh) rotateX(20deg);
+  }
+}
+
+.perspective-800 {
+  perspective: 800px;
+}
+
+.rotate-x-60 {
+  transform: rotateX(60deg);
+}
+
+.animate-scroll {
+  animation: scroll 20s linear;
+}
+
+.duration-2000 {
+  transition-duration: 2000ms;
+}
+
+/* Game text styles */
+.station-label {
+  font-family: "Press Start 2P", serif;
+
+  color: var(--game-text);
+  text-align: center;
+}
+
+.station-title {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.station-subtitle {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.game-title {
+  font-size: 5rem;
+  text-align: center;
+}
+
+@keyframes starwars-crawl {
+  0% {
+    transform: translateY(100vh) scale(1) rotateX(20deg);
+  }
+  100% {
+    transform: translateY(-200vh) scale(0.5) rotateX(20deg);
+  }
+}
+
+.starwars-container {
+  position: absolute;
+  bottom: 0; /* Start from the very bottom */
+  width: 100%;
+  overflow: hidden;
+  perspective: 400px;
+}
+
+.starwars-crawl {
+  font-family: "Press Start 2P", serif;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--game-text);
+  transform: rotateX(25deg) translateZ(0);
+  transform-origin: bottom center;
+  animation: crawl 80s linear; /* Increase the animation duration for a smoother effect */
+  text-align: center;
+  width: 80%;
+  margin: 0 auto;
+}
+
+
+.starwars-title {
+  margin-bottom: 2rem;
+  font-size: 3rem;
+  text-align: center;
+}
+
+.starwars-content {
+  text-align: justify;
+}
+
+@keyframes crawl {
+  0% {
+    transform: rotateX(25deg) translateY(100%); /* Start below the screen */
+    opacity: 1; /* Fully visible at the start */
+  }
+  20% {
+    opacity: 1; /* Keep it fully visible for the first part */
+  }
+  50% {
+    opacity: 0.5; /* Midway through, make it partially transparent */
+  }
+  70% {
+    opacity: 0.3; /* Further up, fade more */
+  }
+  100% {
+    transform: rotateX(25deg) translateY(-150%); /* Extend the animation to move higher up */
+    opacity: 0.2; /* Keep some opacity but fade it significantly */
+  }
+}
+
+
