@@ -43,7 +43,7 @@ const PlanetSchema = new Schema({
   timestamps: true
 });
 
-// Indexes for frequent queries
+// Indexes for frequent queries!
 PlanetSchema.index({ isActive: 1 });
 PlanetSchema.index({ difficulty: 1 });
 
