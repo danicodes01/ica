@@ -1,65 +1,105 @@
 export const drawMoon = (
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    radius: number,
-    isUnlocked: boolean,
-    isHovered: boolean,
-    accentColor: string
-  ) => {
-    ctx.save();
-    
-    if (isUnlocked || isHovered) {
-      ctx.shadowColor = accentColor;
-      ctx.shadowBlur = 20;
-    }
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  radius: number,
+  isUnlocked: boolean,
+  isHovered: boolean,
+  accentColor: string
+) => {
+  ctx.save();
   
-    // Base moon circle
+  if (isUnlocked || isHovered) {
+    ctx.shadowColor = accentColor;
+    ctx.shadowBlur = 20;
+  }
+
+  // Base moon circle with darker color
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = '#2A2A2A';  // Much darker base
+  ctx.fill();
+
+  // Draw ominous craters
+  const craters = [
+    { cx: -0.3, cy: -0.2, size: 0.25 },
+    { cx: 0.2, cy: 0.3, size: 0.3 },
+    { cx: -0.1, cy: 0.2, size: 0.2 },
+    { cx: 0.3, cy: -0.3, size: 0.22 },
+    { cx: 0, cy: 0, size: 0.35 }  // Large central crater
+  ];
+
+  ctx.shadowBlur = 0;
+  craters.forEach(crater => {
+    const craterX = x + (crater.cx * radius);
+    const craterY = y + (crater.cy * radius);
+    const craterRadius = crater.size * radius;
+
+    // Add dark rim to craters
     ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#CFCFCF';
+    ctx.arc(craterX, craterY, craterRadius * 1.1, 0, Math.PI * 2);
+    ctx.fillStyle = '#1A1A1A';  // Darker rim
     ctx.fill();
-  
-    // Draw craters
-    const craters = [
-      { cx: -0.3, cy: -0.2, size: 0.2 },
-      { cx: 0.2, cy: 0.3, size: 0.25 },
-      { cx: -0.1, cy: 0.2, size: 0.15 },
-      { cx: 0.3, cy: -0.3, size: 0.18 }
-    ];
-  
-    ctx.shadowBlur = 0;
-    craters.forEach(crater => {
-      const craterX = x + (crater.cx * radius);
-      const craterY = y + (crater.cy * radius);
-      const craterRadius = crater.size * radius;
-  
-      ctx.beginPath();
-      ctx.arc(craterX, craterY, craterRadius, 0, Math.PI * 2);
-      ctx.fillStyle = '#AFAFAF';
-      ctx.fill();
-    });
-  
-    // Add surface texture
-    const gradient = ctx.createRadialGradient(
-      x - radius * 0.5, 
-      y - radius * 0.5, 
+
+    // Inner crater
+    ctx.beginPath();
+    ctx.arc(craterX, craterY, craterRadius, 0, Math.PI * 2);
+    ctx.fillStyle = '#0A0A0A';  // Almost black inside
+    ctx.fill();
+
+    // Add reddish glow to crater depths
+    const craterGlow = ctx.createRadialGradient(
+      craterX - craterRadius * 0.2,
+      craterY - craterRadius * 0.2,
       0,
-      x, 
-      y, 
-      radius
+      craterX,
+      craterY,
+      craterRadius
     );
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.1)');
-    
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fillStyle = gradient;
+    craterGlow.addColorStop(0, 'rgba(139, 0, 0, 0.15)');  // Dark red glow
+    craterGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = craterGlow;
     ctx.fill();
+  });
+
+  // Add sinister surface texture
+  const gradient = ctx.createRadialGradient(
+    x - radius * 0.5, 
+    y - radius * 0.5, 
+    0,
+    x, 
+    y, 
+    radius
+  );
+  gradient.addColorStop(0, 'rgba(47, 47, 47, 0.4)');  // Darker highlight
+  gradient.addColorStop(0.5, 'rgba(30, 30, 30, 0.2)');
+  gradient.addColorStop(1, 'rgba(10, 10, 10, 0.3)');  // Almost black shadow
   
-    drawHoverEffect(ctx, x, y, radius, isHovered, accentColor);
-    ctx.restore();
-  };
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  // Add subtle red undertone
+  const evilGlow = ctx.createRadialGradient(
+    x, 
+    y, 
+    radius * 0.2,
+    x, 
+    y, 
+    radius
+  );
+  evilGlow.addColorStop(0, 'rgba(139, 0, 0, 0.05)');  // Very subtle dark red
+  evilGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = evilGlow;
+  ctx.fill();
+
+  drawHoverEffect(ctx, x, y, radius, isHovered, accentColor);
+  ctx.restore();
+};
   
   export const drawSaturn = (
     ctx: CanvasRenderingContext2D,
@@ -86,12 +126,27 @@ export const drawMoon = (
       x + radius, 
       y + radius
     );
-    planetGradient.addColorStop(0, '#DAA520');  
-    planetGradient.addColorStop(1, '#CD853F');  
+    planetGradient.addColorStop(0, '#5E00FF');  // Deep purple
+    planetGradient.addColorStop(0.5, '#8A2BE2');  // Mix
+    planetGradient.addColorStop(1, '#FF00C8');  // Bright pink
     ctx.fillStyle = planetGradient;
     ctx.fill();
   
-    // rings
+    // Add some glow effect to the planet body
+    const glowGradient = ctx.createRadialGradient(
+      x - radius * 0.3,
+      y - radius * 0.3,
+      0,
+      x,
+      y,
+      radius
+    );
+    glowGradient.addColorStop(0, 'rgba(255, 0, 200, 0.2)');
+    glowGradient.addColorStop(1, 'rgba(94, 0, 255, 0)');
+    ctx.fillStyle = glowGradient;
+    ctx.fill();
+  
+    // rings with alien energy effect
     ctx.beginPath();
     ctx.ellipse(x, y, radius * 1.5, radius * 0.3, Math.PI / 8, 0, Math.PI * 2);
     const ringGradient = ctx.createLinearGradient(
@@ -100,11 +155,26 @@ export const drawMoon = (
       x + radius * 1.5,
       y
     );
-    ringGradient.addColorStop(0, 'rgba(210, 180, 140, 0.2)');
-    ringGradient.addColorStop(0.5, 'rgba(210, 180, 140, 0.6)');
-    ringGradient.addColorStop(1, 'rgba(210, 180, 140, 0.2)');
+    ringGradient.addColorStop(0, 'rgba(94, 0, 255, 0.1)');
+    ringGradient.addColorStop(0.3, 'rgba(255, 0, 200, 0.6)');
+    ringGradient.addColorStop(0.5, 'rgba(138, 43, 226, 0.8)');
+    ringGradient.addColorStop(0.7, 'rgba(255, 0, 200, 0.6)');
+    ringGradient.addColorStop(1, 'rgba(94, 0, 255, 0.1)');
     ctx.strokeStyle = ringGradient;
     ctx.lineWidth = radius * 0.2;
+    ctx.stroke();
+  
+    // Add pulsing energy rings
+    ctx.beginPath();
+    ctx.ellipse(x, y, radius * 1.6, radius * 0.35, Math.PI / 8, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255, 0, 200, 0.1)';
+    ctx.lineWidth = radius * 0.05;
+    ctx.stroke();
+  
+    ctx.beginPath();
+    ctx.ellipse(x, y, radius * 1.4, radius * 0.25, Math.PI / 8, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(94, 0, 255, 0.1)';
+    ctx.lineWidth = radius * 0.05;
     ctx.stroke();
   
     drawHoverEffect(ctx, x, y, radius * 1.5, isHovered, accentColor);
@@ -127,38 +197,42 @@ export const drawMoon = (
       ctx.shadowBlur = 20;
     }
   
-    // Draw base planet
+    // Draw base planet with gradient
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
-    const venusGradient = ctx.createRadialGradient(
-      x - radius * 0.3,
-      y - radius * 0.3,
-      0,
+    const planetGradient = ctx.createRadialGradient(
+      x,
+      y,
+      radius / 2,
       x,
       y,
       radius
     );
-    venusGradient.addColorStop(0, '#FFE5B4');  // Peach
-    venusGradient.addColorStop(1, '#FFA07A');  // Light salmon
-    ctx.fillStyle = venusGradient;
+    planetGradient.addColorStop(0, '#5E00FF'); // Inner color
+    planetGradient.addColorStop(1, '#FF00C8'); // Outer color
+    ctx.fillStyle = planetGradient;
     ctx.fill();
   
-    // Draw atmospheric swirls
+    // Draw craters
     ctx.shadowBlur = 0;
-    for (let i = 0; i < 3; i++) {
-      const swirl = new Path2D();
-      const startAngle = (i * Math.PI) / 2;
-      swirl.arc(x, y, radius * 0.7, startAngle, startAngle + Math.PI * 1.2);
-      ctx.strokeStyle = 'rgba(255, 228, 196, 0.3)';
-      ctx.lineWidth = radius * 0.1;
-      ctx.stroke(swirl);
-    }
+    // const craterCount = 5;
+    // for (let i = 0; i < craterCount; i++) {
+    //   const craterX = x + (Math.random() - 0.5) * radius * 1.5;
+    //   const craterY = y + (Math.random() - 0.5) * radius * 1.5;
+    //   const craterRadius = Math.random() * (radius * 0.2) + (radius * 0.1);
   
+    //   ctx.beginPath();
+    //   ctx.arc(craterX, craterY, craterRadius, 0, Math.PI * 2);
+    //   ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    //   ctx.fill();
+    // }
+  
+    // Draw the hover effect using the shared function
     drawHoverEffect(ctx, x, y, radius, isHovered, accentColor);
     ctx.restore();
   };
   
-  // Shared hover effect function
+  // Shared hover effect function (included for completeness)
   const drawHoverEffect = (
     ctx: CanvasRenderingContext2D,
     x: number,

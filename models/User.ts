@@ -64,7 +64,7 @@ const UserSchema = new Schema({
     type: Number,
     default: 0
   },
-  level: {
+  level: { // should be tied to station
     type: Number,
     default: 1
   },
