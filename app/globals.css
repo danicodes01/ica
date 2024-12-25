@@ -169,7 +169,7 @@ a {
 
 .starwars-container {
   position: absolute;
-  bottom: 0; /* Start from the very bottom */
+  bottom: 0;
   width: 100%;
   overflow: hidden;
   perspective: 400px;
@@ -182,12 +182,11 @@ a {
   color: var(--game-text);
   transform: rotateX(25deg) translateZ(0);
   transform-origin: bottom center;
-  animation: crawl 80s linear; /* Increase the animation duration for a smoother effect */
+  animation: crawl 80s linear;
   text-align: center;
   width: 80%;
   margin: 0 auto;
 }
-
 
 .starwars-title {
   margin-bottom: 2rem;
@@ -201,22 +200,59 @@ a {
 
 @keyframes crawl {
   0% {
-    transform: rotateX(25deg) translateY(100%); /* Start below the screen */
-    opacity: 1; /* Fully visible at the start */
+    transform: rotateX(25deg) translateY(100%);
+    opacity: 1;
   }
   20% {
-    opacity: 1; /* Keep it fully visible for the first part */
+    opacity: 1;
   }
   50% {
-    opacity: 0.5; /* Midway through, make it partially transparent */
+    opacity: 0.5;
   }
   70% {
-    opacity: 0.3; /* Further up, fade more */
+    opacity: 0.3;
   }
   100% {
-    transform: rotateX(25deg) translateY(-150%); /* Extend the animation to move higher up */
-    opacity: 0.2; /* Keep some opacity but fade it significantly */
+    transform: rotateX(25deg) translateY(-150%);
+    opacity: 0.2;
   }
 }
 
+/* Mobile styles */
+@media (max-width: 768px) {
+  .starwars-container {
+    perspective: 300px; /* Reduce perspective for better mobile viewing */
+  }
 
+  .starwars-crawl {
+    font-size: 1rem;
+    line-height: 1.6;
+    width: 90%; /* Wider text area on mobile */
+    animation: crawl-mobile 60s linear; /* Shorter distance, slower speed */
+  }
+
+  .starwars-title {
+    font-size: 2rem; /* Smaller title on mobile */
+    margin-bottom: 1.5rem;
+  }
+
+  @keyframes crawl-mobile {
+    0% {
+      transform: rotateX(20deg) translateY(100%);
+      opacity: 1;
+    }
+    30% {
+      opacity: 1;
+    }
+    60% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: rotateX(20deg) translateY(-80%); /* Reduced travel distance */
+      opacity: 0;
+    }
+  }
+}
