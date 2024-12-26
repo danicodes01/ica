@@ -32,8 +32,6 @@ export default function GameCanvas({
   const [hoveredStation, setHoveredStation] = useState<Station | null>(null);
   const [stations, setStations] = useState<Station[]>([]);
   const [showIntro, setShowIntro] = useState(true);
-  const [fadeOut, setFadeOut] = useState(false);
-
   // Initialize game state using the GameState interface
   const [gameState, setGameState] = useState<GameState>({
     playerPosition: { x: 0, y: 0 },
@@ -43,26 +41,14 @@ export default function GameCanvas({
   });
 
   // Intro sequence effect
+
   useEffect(() => {
-    const crawlContainer = document.querySelector(
-      '.starwars-crawl',
-    ) as HTMLElement;
-    if (crawlContainer) {
-      crawlContainer.style.animationDuration = '10s'; // Slower scroll speed
-    }
-
-    const timer = setTimeout(() => {
-      setFadeOut(true);
-    }, 6000); // Extend delay for fade out
-
+    // Just wait for animation to finish then hide
     const hideTimer = setTimeout(() => {
       setShowIntro(false);
-    }, 6000); // Match fade-out timing
-
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(hideTimer);
-    };
+    }, 42000); // 90s for animation + 2s buffer
+  
+    return () => clearTimeout(hideTimer);
   }, []);
 
   // Update stations when dimensions change
@@ -138,17 +124,25 @@ export default function GameCanvas({
 
     ctx.save();
     // Set the font to Press Start 2P
-    ctx.font = `${isHovered ? '16px' : '14px'} 'Press Start 2P'`;
+    ctx.font = `${isHovered ? '7px' : '4px'} 'Press Start 2P'`;
     ctx.textAlign = 'center';
     ctx.fillStyle = isHovered ? COLORS.accent : COLORS.foreground;
 
     // Draw the station name
-    ctx.fillText(station.name, x, y - radius - 20);
-
+    ctx.fillText(station.name, x, y - radius - 30);
     // Draw description if hovered
     if (isHovered) {
-      ctx.font = '12px Press Start 2P';
-      ctx.fillText(station.description, x, y - radius - 40);
+      ctx.font = '2px Press Start 2P';
+
+      const words = station.description.split(' ');
+      const halfLength = Math.ceil(words.length / 2);
+
+      const line1 = words.slice(0, halfLength).join(' ');
+      const line2 = words.slice(halfLength).join(' ');
+
+      // Draw each line with spacing
+      ctx.fillText(line1, x, y - radius - 55);
+      ctx.fillText(line2, x, y - radius - 45);
     }
     ctx.restore();
   };
@@ -359,26 +353,104 @@ export default function GameCanvas({
   return (
     <div ref={containerRef} className='fixed inset-0 bg-[#1C1C1EFF]'>
       {showIntro && (
-        <div
-          className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-1000 ${
-            fadeOut ? 'opacity-0' : 'opacity-100'
-          }`}
-        >
+        <div className='fixed inset-0 z-50'>
           <div className='starwars-container'>
             <div className='starwars-crawl'>
-              <div className='starwars-title'>INTERGALACTIC CODE ACADEMY</div>
               <div className='starwars-content'>
-                <p>In a digital galaxy far, far away...</p>
                 <p>
-                  Aspiring developers embark on an epic journey through the
-                  cosmos of code.
+                  where binary stars pulse with ancient machine language,
+                  darkness has crept through the fiber-optic threads that bind
+                  our universe. The great conjunction of the three suns that
+                  once illuminated the Crystal Database has faded, leaving
+                  countless digital worlds in shadow...
                 </p>
+
                 <p>
-                  Your mission, should you choose to accept it, is to navigate
-                  through our celestial learning stations, conquering challenges
-                  and expanding your programming prowess.
+                  From the quantum mists emerged three sentinel planets, each
+                  housing a fragment of the original Source Code that once kept
+                  darkness at bay. CHROMANOVA, a crystalline world of shifting
+                  geometric forms, where the Pixel-Weavers craft interfaces of
+                  pure light and motion. Their artifacts pulse with the same
+                  energy that once powered the first computers in the dawn of
+                  digital time.
                 </p>
-                <p>May the code be with you...</p>
+
+                <p>
+                  SYNTAXIA, realm of the Logic-Singers, where streams of pure
+                  code flow like rivers through valleys of circuitry. Its
+                  inhabitants, evolved from pure energy, speak in algorithms and
+                  dream in recursive patterns. They remember the ancient days
+                  when all planets could communicate through a universal
+                  programming language, before the Great Corruption fragmented
+                  their digital tongues.
+                </p>
+
+                <p>
+                  And QUANTUMCORE, the mysterious sphere where reality and code
+                  intertwine. Here, the Quantum-Mystics meditate in vast
+                  data-temples, their consciousness existing simultaneously
+                  across multiple execution threads. They alone remember the
+                  prophecy of the Luminous Protocol, encrypted in their genetic
+                  algorithms by the ancient Programmer-Sages.
+                </p>
+
+                <p>
+                  For a thousand cycles, these worlds fought separately against
+                  the encroaching void, watching as one digital civilization
+                  after another succumbed to the darkness - their systems
+                  corrupted, their data scrambled, their light extinguished. The
+                  darkness feeds on isolation, turning once-vibrant networks
+                  into dead zones of binary decay.
+                </p>
+
+                <p>
+                  But in their darkest hour, when the shadow-virus threatened to
+                  consume even their quantum-shielded networks, the three worlds
+                  discovered an ancient truth: their unique coding disciplines
+                  were never meant to be separate. Like the shards of a broken
+                  crystal, they were fragments of a greater whole.
+                </p>
+
+                <p>
+                  Through the combined wisdom of the Pixel-Weavers,
+                  Logic-Singers, and Quantum-Mystics, they deciphered the
+                  prophecy of the Luminous Protocol - an ancient system that
+                  could rewrite the basic architecture of their universe,
+                  transforming darkness into light through the power of pure
+                  code. But the Protocol demands a precision they alone cannot
+                  achieve...
+                </p>
+
+                <p>
+                  It speaks of a chosen compiler - a Code Jedi from beyond the
+                  dark firewall, whose consciousness can bridge their different
+                  coding paradigms. One who can weave together the visual magic
+                  of CHROMANOVA, the logical symphonies of SYNTAXIA, and the
+                  quantum riddles of QUANTUMCORE.
+                </p>
+
+                <p>
+                  You are that chosen one. As the darkness spreads, corrupting
+                  repositories and consuming entire server clusters, you must
+                  master each planets sacred coding arts. Learn the ways of the
+                  Pixel-Weavers, channel the algorithms of the Logic-Singers,
+                  and unlock the quantum mysteries of the Code-Mystics.
+                </p>
+
+                <p>
+                  But time grows short. The dark force spreads like a virus
+                  through the galaxys networks, leaving dead code and corrupted
+                  data in its wake. The three planets combined powers can hold
+                  back the darkness only for so long. Only by mastering their
+                  three disciplines and implementing the Luminous Protocol can
+                  you help restore light to the digital universe...
+                </p>
+
+                <p>
+                  Now, young Code Jedi, your training begins. May your functions
+                  be pure, your algorithms true, and may the Source be with you
+                  always...
+                </p>
               </div>
             </div>
           </div>
@@ -387,7 +459,7 @@ export default function GameCanvas({
 
       {/* Game Title */}
       <div className='fixed top-4 left-1/2 transform -translate-x-1/2 pointer-events-none'>
-        <h1 className='font-ps2p text-[color:var(--game-text)] text-3xl text-center'>
+        <h1 className='font-ps2p text-[color:var(--game-text)] text-1xl text-center'>
           INTERGALACTIC CODE ACADEMY
         </h1>
       </div>

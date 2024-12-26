@@ -4,14 +4,14 @@ import { ChallengeDifficulty } from '../types/challenges';
 
 // Helper function to calculate positions
 const getRelativePosition = (
-  width: number, 
+  width: number,
   height: number,
   percentX: number,
-  percentY: number
+  percentY: number,
 ) => ({
   x: width * percentX,
   y: height * percentY,
-  radius: Math.min(width, height) * 0.05 // 5% of smallest dimension
+  radius: Math.min(width, height) * 0.05, // 5% of smallest dimension
 });
 
 export const getGameStations = (width: number, height: number): Station[] => [
@@ -20,9 +20,9 @@ export const getGameStations = (width: number, height: number): Station[] => [
     name: 'Frontend Engineering Corps',
     type: 'venus', // Added type for drawing
     area: GameArea.FRONTEND_CORPS,
-    position: getRelativePosition(width, height, 0.25, 0.3),
+    position: getRelativePosition(width, height, 0.25, 0.4),
     icon: '🛸',
-    description: 'Master frontend engineering with challenges in UI/UX, state management, and optimization.',
+    description: 'Master UI/UX & frontend systems',
     learningPath: {
       title: 'Frontend Development Path',
       description: 'Learn modern frontend development practices',
@@ -34,21 +34,21 @@ export const getGameStations = (width: number, height: number): Station[] => [
           difficulty: ChallengeDifficulty.BEGINNER,
           challenges: ['react-intro', 'state-props', 'hooks-basic'],
           xpReward: 100,
-          completionStatus: ModuleStatus.AVAILABLE
-        }
+          completionStatus: ModuleStatus.AVAILABLE,
+        },
       ],
-      totalXP: 1000
+      totalXP: 1000,
     },
-    isUnlocked: true
+    isUnlocked: true,
   },
   {
     id: 'systems-division',
     name: 'Systems Engineering Division',
     type: 'saturn', // Added type for drawing
     area: GameArea.SYSTEMS_DIVISION,
-    position: getRelativePosition(width, height, 0.75, 0.3),
+    position: getRelativePosition(width, height, 0.75, 0.4),
     icon: '🛰️',
-    description: 'Dive into systems engineering with algorithms, data structures, and system design.',
+    description: 'Core systems & algorithms',
     learningPath: {
       title: 'Systems Engineering Path',
       description: 'Master system design and backend development',
@@ -60,13 +60,13 @@ export const getGameStations = (width: number, height: number): Station[] => [
           difficulty: ChallengeDifficulty.BEGINNER,
           challenges: ['sorting-basics', 'search-algo', 'data-structures'],
           xpReward: 100,
-          completionStatus: ModuleStatus.LOCKED
-        }
+          completionStatus: ModuleStatus.LOCKED,
+        },
       ],
-      totalXP: 1200
+      totalXP: 1200,
     },
     isUnlocked: false,
-    requiredStations: ['frontend-corps']
+    requiredStations: ['frontend-corps'],
   },
   {
     id: 'mission-control',
@@ -75,13 +75,13 @@ export const getGameStations = (width: number, height: number): Station[] => [
     area: GameArea.MISSION_CONTROL,
     position: getRelativePosition(width, height, 0.5, 0.7),
     icon: '🪐',
-    description: 'Central hub for learning path selection and progress tracking.',
+    description: 'Central hub for learning and progress',
     learningPath: {
-      title: 'Mission Control Center',
-      description: 'Track your progress and choose your path',
+      title: 'Mission Control',
+      description: 'Track your progress',
       modules: [],
-      totalXP: 0
+      totalXP: 0,
     },
-    isUnlocked: true
-  }
+    isUnlocked: true,
+  },
 ];
