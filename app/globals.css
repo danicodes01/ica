@@ -119,140 +119,59 @@ a {
   }
 }
 
-.perspective-800 {
-  perspective: 800px;
+
+/* In globals.css, consolidate the crawl styling: */
+.starwars-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 120vh;
+  overflow: hidden;
+  perspective: 360px;
 }
 
-.rotate-x-60 {
-  transform: rotateX(60deg);
+.starwars-crawl {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 100%; 
+  transform: translateX(-50%) rotateX(40deg);
+  transform-origin: 50% 100%;
+  animation: starwars-crawl 90s linear;
 }
 
-.animate-scroll {
-  animation: scroll 20s linear;
+.starwars-content {
+  color: #FFD700;
+  line-height: 1;  /* Reduced line height for larger text */
+  text-align: center;  /* Changed to center like in the image */
 }
 
-.duration-2000 {
-  transition-duration: 2000ms;
-}
-
-/* Game text styles */
-.station-label {
-  font-family: "Press Start 2P", serif;
-
-  color: var(--game-text);
-  text-align: center;
-}
-
-.station-title {
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
-}
-
-.station-subtitle {
-  font-size: 0.75rem;
-  opacity: 0.75;
-}
-
-.game-title {
-  font-size: 5rem;
-  text-align: center;
+.starwars-content p {
+  margin: 3em 0;
+  font-size: .5rem
 }
 
 @keyframes starwars-crawl {
   0% {
-    transform: translateY(100vh) scale(1) rotateX(20deg);
-  }
-  100% {
-    transform: translateY(-200vh) scale(0.5) rotateX(20deg);
-  }
-}
-
-.starwars-container {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  overflow: hidden;
-  perspective: 400px;
-}
-
-.starwars-crawl {
-  font-family: "Press Start 2P", serif;
-  font-size: 1.2rem;
-  line-height: 1.8;
-  color: var(--game-text);
-  transform: rotateX(25deg) translateZ(0);
-  transform-origin: bottom center;
-  animation: crawl 80s linear;
-  text-align: center;
-  width: 80%;
-  margin: 0 auto;
-}
-
-.starwars-title {
-  margin-bottom: 2rem;
-  font-size: 3rem;
-  text-align: center;
-}
-
-.starwars-content {
-  text-align: justify;
-}
-
-@keyframes crawl {
-  0% {
-    transform: rotateX(25deg) translateY(100%);
+    top: 100%;
     opacity: 1;
   }
-  20% {
+  85% {
     opacity: 1;
   }
-  50% {
-    opacity: 0.5;
-  }
-  70% {
-    opacity: 0.3;
-  }
   100% {
-    transform: rotateX(25deg) translateY(-150%);
-    opacity: 0.2;
+    top: -100%;
+    opacity: 0;
   }
 }
 
-/* Mobile styles */
-@media (max-width: 768px) {
-  .starwars-container {
-    perspective: 300px; /* Reduce perspective for better mobile viewing */
-  }
-
-  .starwars-crawl {
+@media (max-width: 412px) {
+  .starwars-content {
     font-size: 1rem;
-    line-height: 1.6;
-    width: 90%; /* Wider text area on mobile */
-    animation: crawl-mobile 60s linear; /* Shorter distance, slower speed */
-  }
 
-  .starwars-title {
-    font-size: 2rem; /* Smaller title on mobile */
-    margin-bottom: 1.5rem;
   }
-
-  @keyframes crawl-mobile {
-    0% {
-      transform: rotateX(20deg) translateY(100%);
-      opacity: 1;
-    }
-    30% {
-      opacity: 1;
-    }
-    60% {
-      opacity: 0.7;
-    }
-    90% {
-      opacity: 0.4;
-    }
-    100% {
-      transform: rotateX(20deg) translateY(-80%); /* Reduced travel distance */
-      opacity: 0;
-    }
+  .starwars-content p {
+    margin: 2em 0;
+    font-size: .5rem; 
   }
 }
