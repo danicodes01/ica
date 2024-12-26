@@ -3,26 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-} */
-
-
 :root {
   --foreground: #3C3C4399;
   --background: #F2F2F7FF;
@@ -65,7 +45,6 @@ body {
   --violet-rgb: 160, 122, 170;
 }
 
-/* Your existing styles */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -100,7 +79,6 @@ a {
   background-size: cover;
   background-position: center;
   font-family: "Press Start 2P", serif;
-
 }
 
 .not-found p,
@@ -109,69 +87,49 @@ a {
   font-weight: 500;
 }
 
-/* Game specific styles */
-@keyframes scroll {
-  0% {
-    transform: translateY(100vh) rotateX(20deg);
-  }
-  100% {
-    transform: translateY(-200vh) rotateX(20deg);
-  }
-}
-
-
-/* In globals.css, consolidate the crawl styling: */
+/* Star Wars crawl styling */
 .starwars-container {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 120vh;
+  height: 100vh;
   overflow: hidden;
-  perspective: 360px;
+  perspective: 400px;
 }
 
 .starwars-crawl {
+  width: 100vw;
+  margin: auto;
   position: absolute;
-  top: 100%;
   left: 50%;
-  width: 100%; 
-  transform: translateX(-50%) rotateX(40deg);
-  transform-origin: 50% 100%;
-  animation: starwars-crawl 90s linear;
+  top: 100%;
+  transform: translateX(-50%) rotateX(30deg);
+  animation: crawl 120s linear forwards;
 }
 
 .starwars-content {
   color: #FFD700;
-  line-height: 1;  /* Reduced line height for larger text */
-  text-align: center;  /* Changed to center like in the image */
+  font-size: 2vw;
+  text-align: justify;
 }
 
 .starwars-content p {
-  margin: 3em 0;
-  font-size: .5rem
+  
+  margin: 2em 0;
 }
 
-@keyframes starwars-crawl {
+@keyframes crawl {
   0% {
     top: 100%;
     opacity: 1;
   }
-  85% {
-    opacity: 1;
-  }
   100% {
-    top: -100%;
+    top: -200%;
     opacity: 0;
   }
 }
 
 @media (max-width: 412px) {
   .starwars-content {
-    font-size: 1rem;
-
-  }
-  .starwars-content p {
-    margin: 2em 0;
-    font-size: .5rem; 
+    font-size: 2vw;
   }
 }

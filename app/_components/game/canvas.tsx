@@ -46,7 +46,7 @@ export default function GameCanvas({
     // Just wait for animation to finish then hide
     const hideTimer = setTimeout(() => {
       setShowIntro(false);
-    }, 42000); // 90s for animation + 2s buffer
+    }, 1000000); // 90s for animation + 2s buffer
   
     return () => clearTimeout(hideTimer);
   }, []);
