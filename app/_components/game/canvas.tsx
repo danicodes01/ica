@@ -33,6 +33,9 @@ export default function GameCanvas({
   const [stations, setStations] = useState<Station[]>([]);
   const [showIntro, setShowIntro] = useState(true);
   // Initialize game state using the GameState interface
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(
+    null,
+  );
   const [gameState, setGameState] = useState<GameState>({
     playerPosition: { x: 0, y: 0 },
     currentArea: initialArea,
@@ -47,7 +50,7 @@ export default function GameCanvas({
     const hideTimer = setTimeout(() => {
       setShowIntro(false);
     }, 1000000); // 90s for animation + 2s buffer
-  
+
     return () => clearTimeout(hideTimer);
   }, []);
 
@@ -83,7 +86,44 @@ export default function GameCanvas({
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
-  // Handle keyboard input
+  // Add these handler functions
+  const handleTouchStart = (e: TouchEvent) => {
+    const touch = e.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY });
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!touchStart) return;
+
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+
+    setGameState(prev => {
+      const newX = Math.max(
+        20,
+        Math.min(dimensions.width - 20, prev.playerPosition.x + deltaX),
+      );
+      const newY = Math.max(
+        20,
+        Math.min(dimensions.height - 20, prev.playerPosition.y + deltaY),
+      );
+
+      return {
+        ...prev,
+        playerPosition: { x: newX, y: newY },
+      };
+    });
+
+    // Update touch start for next move
+    setTouchStart({ x: touch.clientX, y: touch.clientY });
+  };
+
+  const handleTouchEnd = () => {
+    setTouchStart(null);
+  };
+
+  // Modify your keyboard input useEffect to include touch events
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (gameState.isPaused) return;
@@ -100,13 +140,18 @@ export default function GameCanvas({
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [gameState.isPaused]);
-
+  }, [gameState.isPaused, dimensions.width, dimensions.height]);
   // Update game state
   const updateGameState = (updates: Partial<GameState>): void => {
     setGameState(prev => ({
@@ -464,7 +509,11 @@ export default function GameCanvas({
         </h1>
       </div>
 
-      <canvas ref={canvasRef} className='block' />
+      <canvas
+        ref={canvasRef}
+        className='block'
+        style={{ touchAction: 'none' }}
+      />
     </div>
   );
 }

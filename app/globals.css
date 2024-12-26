@@ -123,8 +123,8 @@ a {
     opacity: 1;
   }
   100% {
-    top: -200%;
-    opacity: 0;
+    top: -90%;
+    opacity: 1;
   }
 }
 
