@@ -7,7 +7,7 @@ import { getGameStations } from '../../_data/stations';
 import IntroCrawl from './intro-crawl';
 
 
-import { drawMoon, drawSaturn, drawVenus } from './utils/drawStations';
+import { drawMoon, drawSaturn, drawVenus, drawQuantumCore } from './utils/drawStations';
 
 // constants
 const COLORS: GameColors = {
@@ -159,12 +159,20 @@ export default function GameCanvas({
 
     ctx.save();
     // Set the font to Press Start 2P
-    ctx.font = `${isHovered ? '7px' : '4px'} 'Press Start 2P'`;
+    ctx.font = `${isHovered ? '7.5px' : '9px'} 'Press Start 2P'`;
+    const titlewords = station.name.split(' ');
+    const halfTitle = Math.ceil(titlewords.length / 2)
+
+    const lineA = titlewords.slice(0, halfTitle).join(" ");
+    const lineB = titlewords.slice(halfTitle).join(" ");
+
+    
     ctx.textAlign = 'center';
     ctx.fillStyle = isHovered ? COLORS.accent : COLORS.foreground;
 
     // Draw the station name
-    ctx.fillText(station.name, x, y - radius - 30);
+    ctx.fillText(lineA, x, y - radius - 30);
+    ctx.fillText(lineB, x, y - radius - 20);
     // Draw description if hovered
     if (isHovered) {
       ctx.font = '2px Press Start 2P';
@@ -300,6 +308,17 @@ export default function GameCanvas({
             COLORS.accent,
           );
           break;
+          case 'quantum-core':
+            drawQuantumCore(
+              ctx,
+              x,
+              y,
+              radius,
+              station.isUnlocked,
+              isHovered,
+              COLORS.accent,
+              
+            )
       }
 
       // Draw the label after drawing the station
@@ -332,7 +351,7 @@ export default function GameCanvas({
       // Draw UFO with glow effect
       ctx.shadowColor = COLORS.accent;
       ctx.shadowBlur = 15;
-      ctx.font = '28px Arial';
+      ctx.font = '30px Arial';
       ctx.fillStyle = '#FFFFFF';
       ctx.fillText(
         '🛸',

@@ -27,7 +27,7 @@ export interface StationPosition {
 export interface Station {
   id: string;
   name: string;
-  type: 'moon' | 'venus' | 'saturn';
+  type: 'moon' | 'venus' | 'saturn' | 'niburu';
   area: GameArea;
   position: {
     x: number;

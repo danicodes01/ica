@@ -233,6 +233,87 @@ export const drawMoon = (
   };
   
   // Shared hover effect function (included for completeness)
+
+
+  export const drawQuantumCore = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    radius: number,
+    isUnlocked: boolean,
+    isHovered: boolean,
+    accentColor: string
+  ) => {
+    ctx.save();
+  
+    if (isUnlocked || isHovered) {
+      ctx.shadowColor = accentColor;
+      ctx.shadowBlur = 20;
+    }
+  
+    // Base planet with gradient
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    const planetGradient = ctx.createRadialGradient(
+      x, y, radius * 0.3, 
+      x, y, radius
+    );
+    planetGradient.addColorStop(0, '#0000FF');  // Dark blue center
+    planetGradient.addColorStop(0.5, '#8A2BE2');  // Purple blend
+    planetGradient.addColorStop(1, '#00FFFF');  // Cyan outer edge
+    ctx.fillStyle = planetGradient;
+    ctx.fill();
+  
+    // Glow effect for the planet body
+    const glowGradient = ctx.createRadialGradient(
+      x - radius * 0.4,
+      y - radius * 0.4,
+      0,
+      x,
+      y,
+      radius
+    );
+    glowGradient.addColorStop(0, 'rgba(0, 255, 255, 0.2)');  // Neon cyan glow
+    glowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = glowGradient;
+    ctx.fill();
+  
+    // Rings of quantum energy
+    ctx.beginPath();
+    ctx.ellipse(x, y, radius * 1.5, radius * 0.3, Math.PI / 6, 0, Math.PI * 2);
+    const ringGradient = ctx.createLinearGradient(
+      x - radius * 1.5,
+      y,
+      x + radius * 1.5,
+      y
+    );
+    ringGradient.addColorStop(0, 'rgba(0, 255, 255, 0.1)');
+    ringGradient.addColorStop(0.3, 'rgba(138, 43, 226, 0.6)');
+    ringGradient.addColorStop(0.6, 'rgba(0, 0, 255, 0.7)');
+    ringGradient.addColorStop(1, 'rgba(0, 255, 255, 0.1)');
+    ctx.strokeStyle = ringGradient;
+    ctx.lineWidth = radius * 0.2;
+    ctx.stroke();
+  
+    // Pulsing energy rings
+    ctx.beginPath();
+    ctx.ellipse(x, y, radius * 1.6, radius * 0.35, Math.PI / 6, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+    ctx.lineWidth = radius * 0.05;
+    ctx.stroke();
+  
+    ctx.beginPath();
+    ctx.ellipse(x, y, radius * 1.4, radius * 0.25, Math.PI / 6, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(138, 43, 226, 0.1)';
+    ctx.lineWidth = radius * 0.05;
+    ctx.stroke();
+  
+    // Draw hover effect if hovered
+    drawHoverEffect(ctx, x, y, radius, isHovered, accentColor);
+    ctx.restore();
+  };
+  
+  // Shared hover effect function (included for completeness)
   const drawHoverEffect = (
     ctx: CanvasRenderingContext2D,
     x: number,

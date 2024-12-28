@@ -1,7 +1,8 @@
 export enum GameArea {
     MISSION_CONTROL = 'mission-control',
-    FRONTEND_CORPS = 'frontend-corps',
-    SYSTEMS_DIVISION = 'systems-division'
+    QUANTUMCORE = 'quantumcore', // Added QUANTUMCORE
+    CHROMANOVA = 'chromanova',   // Added CHROMANOVA
+    SYNTAXIA = 'syntaxia',       // Added SYNTAXIA
   }
   
   export interface GamePosition {

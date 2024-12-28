@@ -17,15 +17,15 @@ const getRelativePosition = (
 export const getGameStations = (width: number, height: number): Station[] => [
   {
     id: 'frontend-corps',
-    name: 'Frontend Engineering Corps',
+    name: 'CHROMANOVA',
     type: 'venus', // Added type for drawing
-    area: GameArea.FRONTEND_CORPS,
-    position: getRelativePosition(width, height, 0.25, 0.4),
-    icon: '🛸',
+    area: GameArea.CHROMANOVA,
+    position: getRelativePosition(width, height, 0.25, 0.5),
+    icon: '🌌',
     description: 'Master UI/UX & frontend systems',
     learningPath: {
       title: 'Frontend Development Path',
-      description: 'Learn modern frontend development practices',
+      description: 'Learn modern frontend development practices and design.',
       modules: [
         {
           id: 'react-basics',
@@ -43,15 +43,15 @@ export const getGameStations = (width: number, height: number): Station[] => [
   },
   {
     id: 'systems-division',
-    name: 'Systems Engineering Division',
+    name: 'SYNTAXIA',
     type: 'saturn', // Added type for drawing
-    area: GameArea.SYSTEMS_DIVISION,
-    position: getRelativePosition(width, height, 0.75, 0.4),
+    area: GameArea.SYNTAXIA,
+    position: getRelativePosition(width, height, 0.75, .56),
     icon: '🛰️',
     description: 'Core systems & algorithms',
     learningPath: {
       title: 'Systems Engineering Path',
-      description: 'Master system design and backend development',
+      description: 'Core systems & algorithms where logic, backend systems, and APIs are mastered.',
       modules: [
         {
           id: 'algo-basics',
@@ -83,5 +83,31 @@ export const getGameStations = (width: number, height: number): Station[] => [
       totalXP: 0,
     },
     isUnlocked: true,
+  },  {
+    id: 'quantum-core',
+    name: 'QUANTUMCORE',
+    type: 'niburu', 
+    area: GameArea.QUANTUMCORE,
+    position: getRelativePosition(width, height, 0.5, .36),
+    icon: '⚛️',
+    description: 'Where quantum algorithms and data science solve complex problems',
+    learningPath: {
+      title: 'Data Science & Quantum Computing Path',
+      description: 'Dive into the mysteries of data science, quantum computing, and machine learning.',
+      modules: [
+        {
+          id: 'quantum-algorithms',
+          title: 'Quantum Algorithm Fundamentals',
+          description: 'Explore quantum computing principles and how to solve complex problems with quantum algorithms.',
+          difficulty: ChallengeDifficulty.INTERMEDIATE,
+          challenges: ['quantum-basics', 'machine-learning-basics'],
+          xpReward: 200,
+          completionStatus: ModuleStatus.LOCKED,
+        },
+      ],
+      totalXP: 1500,
+    },
+    isUnlocked: false,
+    requiredStations: ['frontend-corps', 'systems-division'],
   },
 ];
