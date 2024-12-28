@@ -123,7 +123,7 @@ a {
   inset: 0;
   height: 100vh;
   overflow: hidden;
-  perspective: 1000px;
+  perspective: 2000px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -179,8 +179,8 @@ a {
   );
   pointer-events: none;
   z-index: 1;
-  opacity: 0; /* Start as invisible */
-  transition: opacity 1s ease;
+  opacity: 0;
+  transition: opacity 0s ease;
 }
 
 

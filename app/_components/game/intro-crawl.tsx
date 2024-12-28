@@ -73,6 +73,7 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
     if (isStarted && activeLines >= lines.length) {
       const timer = setTimeout(() => {
         onComplete();
+        setIsStarted(false)
       }, LINE_FADE_DURATION * 1000);
 
       return () => clearTimeout(timer);
