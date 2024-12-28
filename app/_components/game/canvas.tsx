@@ -386,24 +386,24 @@ export default function GameCanvas({
   ]);
 
   return (
-    <div ref={containerRef} className='fixed inset-0 bg-[#1C1C1EFF]'>
-      {showIntro && (
-        <div className='fixed inset-0 z-50'>
-          <IntroCrawl onComplete={() => setShowIntro(false)} />
-        </div>
-      )}
-
-      {/* Game Title */}
+    <div ref={containerRef} className='fixed inset-0 overflow-hidden bg-[#1C1C1EFF]'>
       <div className='fixed top-4 left-1/2 transform -translate-x-1/2 pointer-events-none'>
         <h1 className='font-ps2p text-[color:var(--game-text)] text-1xl text-center'>
           INTERGALACTIC CODE ACADEMY
         </h1>
       </div>
+      {showIntro && (
+        <div className='fixed inset-0 z-50'>
+          <IntroCrawl onComplete={() => setShowIntro(false)} />
+        </div>
+      )}
+      {/* Game Title */}
+
 
       <canvas
         ref={canvasRef}
-        className='block'
-        style={{ touchAction: 'none' }}
+        className="block w-full h-full" // Ensure canvas fills container
+        style={{ touchAction: 'none' }} // Disable touch scrolling
       />
     </div>
   );

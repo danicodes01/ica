@@ -45,7 +45,7 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
     if (contentRef.current && crawlRef.current) {
       const contentHeight = contentRef.current.offsetHeight;
       const containerHeight = crawlRef.current.offsetHeight;
-      const bufferDistance = 100; // Extra scroll buffer
+      const bufferDistance = 0; // Extra scroll buffer
       const totalScrollDistance = containerHeight + contentHeight + bufferDistance;
 
       const newEndPosition = -contentHeight - containerHeight;
@@ -78,6 +78,14 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
       return () => clearTimeout(timer);
     }
   }, [activeLines, isStarted, lines.length, onComplete]);
+
+  useEffect(() => {
+    if (isStarted) {
+      document.querySelector('.fade-mask')?.classList.add('active');
+    } else {
+      document.querySelector('.fade-mask')?.classList.remove('active');
+    }
+  }, [isStarted]);
 
   return (
     <div className="starwars-container" ref={crawlRef}>
