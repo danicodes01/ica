@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { GameState, GameColors, GameArea } from '../../types/game';
 import { Station } from '../../types/station';
 import { getGameStations } from '../../_data/stations';
+import IntroCrawl from './intro-crawl';
+
 
 import { drawMoon, drawSaturn, drawVenus } from './utils/drawStations';
 
@@ -43,17 +45,6 @@ export default function GameCanvas({
     isPaused: false,
   });
 
-  // Intro sequence effect
-
-  useEffect(() => {
-    // Just wait for animation to finish then hide
-    const hideTimer = setTimeout(() => {
-      setShowIntro(false);
-    }, 1000000); // 90s for animation + 2s buffer
-
-    return () => clearTimeout(hideTimer);
-  }, []);
-
   // Update stations when dimensions change
   useEffect(() => {
     if (dimensions.width && dimensions.height) {
@@ -92,13 +83,13 @@ export default function GameCanvas({
     setTouchStart({ x: touch.clientX, y: touch.clientY });
   };
 
-  const handleTouchMove = (e: TouchEvent) => {
+  const handleTouchMove = useCallback((e: TouchEvent) => {
     if (!touchStart) return;
-
+  
     const touch = e.touches[0];
     const deltaX = touch.clientX - touchStart.x;
     const deltaY = touch.clientY - touchStart.y;
-
+  
     setGameState(prev => {
       const newX = Math.max(
         20,
@@ -108,16 +99,15 @@ export default function GameCanvas({
         20,
         Math.min(dimensions.height - 20, prev.playerPosition.y + deltaY),
       );
-
+  
       return {
         ...prev,
         playerPosition: { x: newX, y: newY },
       };
     });
 
-    // Update touch start for next move
     setTouchStart({ x: touch.clientX, y: touch.clientY });
-  };
+  }, [touchStart, dimensions.width, dimensions.height]);
 
   const handleTouchEnd = () => {
     setTouchStart(null);
@@ -129,7 +119,7 @@ export default function GameCanvas({
       if (gameState.isPaused) return;
       setKeys(prev => new Set([...prev, e.key]));
     };
-
+  
     const handleKeyUp = (e: KeyboardEvent): void => {
       setKeys(prev => {
         const newKeys = new Set([...prev]);
@@ -137,13 +127,13 @@ export default function GameCanvas({
         return newKeys;
       });
     };
-
+  
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('touchstart', handleTouchStart);
     window.addEventListener('touchmove', handleTouchMove);
     window.addEventListener('touchend', handleTouchEnd);
-
+  
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
@@ -151,7 +141,7 @@ export default function GameCanvas({
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [gameState.isPaused, dimensions.width, dimensions.height]);
+  }, [gameState.isPaused, handleTouchMove]);
   // Update game state
   const updateGameState = (updates: Partial<GameState>): void => {
     setGameState(prev => ({
@@ -399,106 +389,7 @@ export default function GameCanvas({
     <div ref={containerRef} className='fixed inset-0 bg-[#1C1C1EFF]'>
       {showIntro && (
         <div className='fixed inset-0 z-50'>
-          <div className='starwars-container'>
-            <div className='starwars-crawl'>
-              <div className='starwars-content'>
-                <p>
-                  where binary stars pulse with ancient machine language,
-                  darkness has crept through the fiber-optic threads that bind
-                  our universe. The great conjunction of the three suns that
-                  once illuminated the Crystal Database has faded, leaving
-                  countless digital worlds in shadow...
-                </p>
-
-                <p>
-                  From the quantum mists emerged three sentinel planets, each
-                  housing a fragment of the original Source Code that once kept
-                  darkness at bay. CHROMANOVA, a crystalline world of shifting
-                  geometric forms, where the Pixel-Weavers craft interfaces of
-                  pure light and motion. Their artifacts pulse with the same
-                  energy that once powered the first computers in the dawn of
-                  digital time.
-                </p>
-
-                <p>
-                  SYNTAXIA, realm of the Logic-Singers, where streams of pure
-                  code flow like rivers through valleys of circuitry. Its
-                  inhabitants, evolved from pure energy, speak in algorithms and
-                  dream in recursive patterns. They remember the ancient days
-                  when all planets could communicate through a universal
-                  programming language, before the Great Corruption fragmented
-                  their digital tongues.
-                </p>
-
-                <p>
-                  And QUANTUMCORE, the mysterious sphere where reality and code
-                  intertwine. Here, the Quantum-Mystics meditate in vast
-                  data-temples, their consciousness existing simultaneously
-                  across multiple execution threads. They alone remember the
-                  prophecy of the Luminous Protocol, encrypted in their genetic
-                  algorithms by the ancient Programmer-Sages.
-                </p>
-
-                <p>
-                  For a thousand cycles, these worlds fought separately against
-                  the encroaching void, watching as one digital civilization
-                  after another succumbed to the darkness - their systems
-                  corrupted, their data scrambled, their light extinguished. The
-                  darkness feeds on isolation, turning once-vibrant networks
-                  into dead zones of binary decay.
-                </p>
-
-                <p>
-                  But in their darkest hour, when the shadow-virus threatened to
-                  consume even their quantum-shielded networks, the three worlds
-                  discovered an ancient truth: their unique coding disciplines
-                  were never meant to be separate. Like the shards of a broken
-                  crystal, they were fragments of a greater whole.
-                </p>
-
-                <p>
-                  Through the combined wisdom of the Pixel-Weavers,
-                  Logic-Singers, and Quantum-Mystics, they deciphered the
-                  prophecy of the Luminous Protocol - an ancient system that
-                  could rewrite the basic architecture of their universe,
-                  transforming darkness into light through the power of pure
-                  code. But the Protocol demands a precision they alone cannot
-                  achieve...
-                </p>
-
-                <p>
-                  It speaks of a chosen compiler - a Code Jedi from beyond the
-                  dark firewall, whose consciousness can bridge their different
-                  coding paradigms. One who can weave together the visual magic
-                  of CHROMANOVA, the logical symphonies of SYNTAXIA, and the
-                  quantum riddles of QUANTUMCORE.
-                </p>
-
-                <p>
-                  You are that chosen one. As the darkness spreads, corrupting
-                  repositories and consuming entire server clusters, you must
-                  master each planets sacred coding arts. Learn the ways of the
-                  Pixel-Weavers, channel the algorithms of the Logic-Singers,
-                  and unlock the quantum mysteries of the Code-Mystics.
-                </p>
-
-                <p>
-                  But time grows short. The dark force spreads like a virus
-                  through the galaxys networks, leaving dead code and corrupted
-                  data in its wake. The three planets combined powers can hold
-                  back the darkness only for so long. Only by mastering their
-                  three disciplines and implementing the Luminous Protocol can
-                  you help restore light to the digital universe...
-                </p>
-
-                <p>
-                  Now, young Code Jedi, your training begins. May your functions
-                  be pure, your algorithms true, and may the Source be with you
-                  always...
-                </p>
-              </div>
-            </div>
-          </div>
+          <IntroCrawl onComplete={() => setShowIntro(false)} />
         </div>
       )}
 
