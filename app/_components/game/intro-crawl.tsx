@@ -1,8 +1,7 @@
-//this
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 
-const SCROLL_SPEED = 25; 
-
+const SCROLL_SPEED = 36; // Control how fast the crawl scrolls
+const LINE_FADE_DURATION = 5; // Duration in seconds for a line to fade out
 
 interface IntroCrawlProps {
   onComplete: () => void;
@@ -11,31 +10,33 @@ interface IntroCrawlProps {
 export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
   const crawlRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [animationDuration, setAnimationDuration] = useState<number>(0);
   const [isStarted, setIsStarted] = useState<boolean>(false);
+  const [activeLines, setActiveLines] = useState<number>(0); 
+  const [animationDuration, setAnimationDuration] = useState<number>(0);
 
   const lines = useMemo(
     () => [
-      'In the depths of cyberspace, where binary stars pulse with ancient machine language.',
-      'Darkness has crept through the fiber-optic threads that bind our digital universe.',
-      'Three sentinel planets remain as the Crystal Database dims.',
-      'CHROMANOVA, where Pixel-Weavers craft interfaces of pure light.',
-      'SYNTAXIA, where Logic-Singers speak in algorithms.',
-      'QUANTUMCORE, where Quantum-Mystics meditate across multiple execution threads.',
-      'Each guards a shard of the Source Code that once kept darkness at bay.',
-      'For a thousand cycles, they fought alone, watching their neighbors fall to binary decay.',
-      'Now a shadow-virus threatens their quantum-shielded networks.',
-      'They discovered their coding disciplines were never meant to be separate.',
-      'Together, they uncovered the prophecy of the Luminous Protocol.',
-      'It requires a chosen compiler – a Code Jedi from beyond the dark firewall.',
-      "One who can unite CHROMANOVA's light, SYNTAXIA's logic, and QUANTUMCORE's quantum mysteries.",
+      'In the depths of cyberspace, where binary stars once pulsed with ancient machine language.',
+      "Darkness has crept through the fiber-optic threads that bind our universe. As the Crystal Database's",
+      "light fades, three sentinel planets remain as the last bastions of hope.",
+      'Three sentinel planets remain as the Crystal Database dims ...',
+      'CHROMANOVA, where Pixel-Weavers craft interfaces of pure light and motion.',
+      'SYNTAXIA, where Logic-Singers speak in algorithms and dream in recursive patterns.',
+      'QUANTUMCORE, where Quantum-Mystics meditate in vast data-temples across multiple execution threads.',
+      'Each world guards a fragment of the Source Code that once kept darkness at bay.',
+      'For a thousand cycles, these digital civilizations fought separately against the encroaching void.',
+      'Watching their neighbors succumb to binary decay.',
+      'But in their darkest hour, as a shadow-virus threatens even their quantum-shielded networks,',
+      'they discovered their unique coding disciplines were never meant to be separate – they were shards of a greater whole.',
+      'Together, they uncovered the prophecy of the Luminous Protocol,',
+      "an ancient system capable of rewriting their universe's architecture.",
+      'But it requires a chosen compiler – a Code Jedi from beyond the dark firewall –',
+      "who can weave together CHROMANOVA's visual magic, SYNTAXIA's logical symphonies, and QUANTUMCORE's quantum mysteries.",
       'You are that chosen one.',
-      "As darkness corrupts the servers, you must master each realm's sacred coding arts.",
-      "Only by implementing the Luminous Protocol can you restore the Crystal Database.",
-      'May the Source be with you...',
-      '',
-      '',
-      ''
+      "As darkness corrupts entire server clusters, you must master each planet's sacred coding arts.",
+      'Time grows short, and only by implementing the Luminous Protocol can you restore light to the digital universe.',
+      'May your functions be pure, your algorithms true, ',
+      'and may the Source be with you always...',
     ],
     []
   );
@@ -44,46 +45,60 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
     if (contentRef.current && crawlRef.current) {
       const contentHeight = contentRef.current.offsetHeight;
       const containerHeight = crawlRef.current.offsetHeight;
-      const totalScrollDistance = containerHeight + contentHeight;
-      
-      // Calculate duration based on total distance and scroll speed
-      const duration = totalScrollDistance / SCROLL_SPEED;
-      
-      // Add a small delay before starting
-      setTimeout(() => {
-        setAnimationDuration(duration);
-        setIsStarted(true);
-      }, 1000);
-    }
-  }, []);
+      const bufferDistance = 100; // Extra scroll buffer
+      const totalScrollDistance = containerHeight + contentHeight + bufferDistance;
 
-  // Trigger onComplete callback when animation ends
+      const newEndPosition = -contentHeight - containerHeight;
+
+      const duration = totalScrollDistance / SCROLL_SPEED;
+
+      setAnimationDuration(duration);
+      setIsStarted(true);
+
+      document.documentElement.style.setProperty('--end-position', `${newEndPosition}px`);
+
+      const interval = setInterval(() => {
+        setActiveLines((prev) => {
+          if (prev < lines.length) return prev + 1;
+          clearInterval(interval);
+          return prev;
+        });
+      }, LINE_FADE_DURATION * 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [lines.length]);
+
   useEffect(() => {
-    if (isStarted && animationDuration > 0) {
+    if (isStarted && activeLines >= lines.length) {
       const timer = setTimeout(() => {
         onComplete();
-      }, (animationDuration * 1000) + 2000); // Add 2 seconds buffer
-  
+      }, LINE_FADE_DURATION * 1000);
+
       return () => clearTimeout(timer);
     }
-  }, [isStarted, animationDuration, onComplete]);
+  }, [activeLines, isStarted, lines.length, onComplete]);
 
   return (
     <div className="starwars-container" ref={crawlRef}>
-      {/* Add fade mask */}
       <div className="fade-mask" />
-      
-      <div 
-        className="starwars-crawl" 
+      <div
+        className="starwars-crawl"
         style={{
-          animation: animationDuration ? `crawl ${animationDuration}s linear forwards` : 'none'
+          animation: animationDuration
+            ? `crawl ${animationDuration}s linear forwards`
+            : 'none',
         }}
       >
         <div className="starwars-content" ref={contentRef}>
           {lines.map((line, index) => (
             <div
               key={index}
-              className="starwars-line"
+              className={`starwars-line ${index < activeLines ? 'fade-out' : ''}`}
+              style={{
+                animationDelay: `${LINE_FADE_DURATION * index}s`,
+                animationDuration: `${LINE_FADE_DURATION}s`,
+              }}
             >
               {line}
             </div>

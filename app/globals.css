@@ -124,11 +124,25 @@ a {
   padding: 0 20%;
 }
 
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .starwars-line {
   line-height: 1.8;
-  margin: 0.8em 0;
-  transition: opacity 5s ease-out;
+  opacity: 1;
+  transform: translateZ(0);
 }
+
+.starwars-line.fade-out {
+  animation: fadeOut 5s ease-in forwards; /* to match LINE_FADE_DURATION */
+}
+
 
 .fade-mask {
   position: fixed;
@@ -153,7 +167,9 @@ a {
     transform: translateX(-50%) rotateX(20deg) scale(1);
   }
   100% {
-    top: -200vh; /* Adjust this value to ensure all content is visible */
+    top: var(--end-position);
     transform: translateX(-50%) rotateX(20deg) scale(1);
   }
 }
+
+
