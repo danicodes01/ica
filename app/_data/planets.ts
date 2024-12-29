@@ -73,7 +73,7 @@ export const getGamePlanets = (width: number, height: number): Planet[] => [
     name: 'Mission Control',
     type: 'moon',
     area: GameArea.MISSION_CONTROL,
-    position: getRelativePosition(width, height, 0.5, 0.7),
+    position: getRelativePosition(width, height, 0.5, 0.8),
     icon: '🪐',
     description: 'Central hub for learning and progress',
     learningPath: {
@@ -89,7 +89,7 @@ export const getGamePlanets = (width: number, height: number): Planet[] => [
     name: 'QUANTUMCORE',
     type: 'quantumCore',
     area: GameArea.QUANTUMCORE,
-    position: getRelativePosition(width, height, 0.5, 0.36),
+    position: getRelativePosition(width, height, 0.5, 0.26),
     icon: '⚛️',
     description: 'Where quantum algorithms and data science solve complex problems',
     learningPath: {

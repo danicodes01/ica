@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 
-const SCROLL_SPEED = 36; // Control how fast the crawl scrolls
-const LINE_FADE_DURATION = 5; // Duration in seconds for a line to fade out
+const SCROLL_SPEED = 33; // Control how fast the crawl scrolls
+const LINE_FADE_DURATION = 6; // Duration in seconds for a line to fade out
 
 interface IntroCrawlProps {
   onComplete: () => void;
@@ -11,8 +11,8 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
   const crawlRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [isStarted, setIsStarted] = useState<boolean>(false);
-  const [activeLines, setActiveLines] = useState<number>(0); 
   const [animationDuration, setAnimationDuration] = useState<number>(0);
+  const [hideFade, setHideFade] = useState<boolean>(false);
 
   const lines = useMemo(
     () => [
@@ -56,37 +56,29 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
       setIsStarted(true);
 
       document.documentElement.style.setProperty('--end-position', `${newEndPosition}px`);
-
-      const interval = setInterval(() => {
-        setActiveLines((prev) => {
-          if (prev < lines.length) return prev + 1;
-          clearInterval(interval);
-          return prev;
-        });
-      }, LINE_FADE_DURATION * 1000);
-
-      return () => clearInterval(interval);
     }
-  }, [lines.length]);
-
-  useEffect(() => {
-    if (isStarted && activeLines >= lines.length) {
-      const timer = setTimeout(() => {
-        onComplete();
-        setIsStarted(false)
-      }, LINE_FADE_DURATION * 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [activeLines, isStarted, lines.length, onComplete]);
+  }, [lines.length, onComplete]);
 
   useEffect(() => {
     if (isStarted) {
+      // Activate fade-mask immediately when the text animation starts
       document.querySelector('.fade-mask')?.classList.add('active');
-    } else {
-      document.querySelector('.fade-mask')?.classList.remove('active');
+
+      // Set a 60-second timeout to deactivate the fade-mask
+      const timer = setTimeout(() => {
+        setHideFade(true);
+      }, 58999); // 60 seconds
+
+      return () => clearTimeout(timer);
     }
   }, [isStarted]);
+
+  useEffect(() => {
+    if (hideFade) {
+      // Remove the active class from fade-mask once the timeout has completed
+      document.querySelector('.fade-mask')?.classList.remove('active');
+    }
+  }, [hideFade]);
 
   return (
     <div className="starwars-container" ref={crawlRef}>
@@ -103,7 +95,7 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
           {lines.map((line, index) => (
             <div
               key={index}
-              className={`starwars-line ${index < activeLines ? 'fade-out' : ''}`}
+              className={`starwars-line`}
               style={{
                 animationDelay: `${LINE_FADE_DURATION * index}s`,
                 animationDuration: `${LINE_FADE_DURATION}s`,
