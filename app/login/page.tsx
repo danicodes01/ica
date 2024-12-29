@@ -8,29 +8,30 @@ export default function Login() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+// In your login/page.tsx
+const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-
-    // Extract email and password from the form
+  
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-
-    if (!email || !password) {
-      setError('Please enter both email and password.');
-      return;
-    }
-
-    const res = await signIn('credentials', {
-      email,
-      password,
-      redirect: false, // Prevent automatic redirection
-    });
-
-    if (res?.error) {
-      setError(res.error);
-    } else if (res?.ok) {
-      router.push('/'); // Redirect to the home page
+  
+    try {
+      const res = await signIn('credentials', {
+        email,
+        password,
+        redirect: false
+      });
+  
+      if (res?.error) {
+        setError(res.error);
+      } else if (res?.ok) {
+        router.replace('/');
+        router.refresh();
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('An unexpected error occurred');
     }
   };
   return (

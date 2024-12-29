@@ -31,6 +31,12 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: '/login',
+    signOut: '/login',
+    error: '/login', // Error code passed in query string as ?error=
+  },
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
   },
