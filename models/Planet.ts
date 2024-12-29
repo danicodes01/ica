@@ -1,50 +1,41 @@
 import { Schema, model } from 'mongoose';
+import { ModuleStatus } from '../app/types/planet';
 
-const PlanetSchema = new Schema({
-  name: { 
-    type: String, 
-    required: true,
-    unique: true,
-    trim: true
-  },
-  description: { 
-    type: String, 
-    required: true 
-  },
-  assetUrl: { 
-    type: String, 
-    required: true 
-  },
-  difficulty: { 
-    type: Number, 
-    required: true,
-    min: 1,
-    max: 10 
-  },
-  currencyType: { 
-    type: String, 
-    required: true,
-    enum: ['lunar', 'venus', 'saturn'] 
-  },
-  themeColor: {
-    type: String,
-    required: true,
-  },
-  coordinates: {
-    x: { type: Number, required: true },
-    y: { type: Number, required: true },
-    z: { type: Number, required: true }
-  },
-  isActive: { 
-    type: Boolean, 
-    default: true 
-  },
-}, {
-  timestamps: true
-});
 
-// Indexes for frequent queries!
-PlanetSchema.index({ isActive: 1 });
-PlanetSchema.index({ difficulty: 1 });
+const PlanetSchema = new Schema(
+  {
+    name: { type: String, required: true, unique: true, trim: true },
+    description: { type: String, required: true },
+    type: {
+      type: String,
+      required: true,
+      enum: ['chromanova', 'syntaxia', 'quantumcore', 'mission-control'],
+    },
+    position: {
+      x: { type: Number, required: true },
+      y: { type: Number, required: true },
+      radius: { type: Number, required: true },
+    },
+    learningPath: {
+      title: { type: String, required: true },
+      description: { type: String, required: true },
+      modules: [
+        {
+          id: { type: String, required: true },
+          title: { type: String, required: true },
+          description: { type: String, required: true },
+          difficulty: { type: String, required: true },
+          challenges: [{ type: String, required: true }],
+          xpReward: { type: Number, required: true },
+          completionStatus: { type: String, enum: Object.values(ModuleStatus), required: true },
+        },
+      ],
+      totalXP: { type: Number, required: true },
+    },
+    isUnlocked: { type: Boolean, default: false },
+    requiredPlanets: [{ type: Schema.Types.ObjectId, ref: 'Planet' }],
+  },
+  { timestamps: true }
+);
 
 export const Planet = model('Planet', PlanetSchema);

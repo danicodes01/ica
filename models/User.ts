@@ -1,85 +1,120 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model, models } from 'mongoose';
+import { Currency, IUserDocument, IUserModel } from '../app/types/user';
 
-const StationProgressSchema = new Schema({
-  stationNumber: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 10
+const UserSchema = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    image: String,
+    emailVerified: Date,
+    password: { type: String, required: true, select: false },
+
+    totalXP: {
+      type: Number,
+      default: 0,
+    },
+
+    totalCurrency: {
+      lunar: { type: Number, default: 0 },
+      chromanova: { type: Number, default: 0 },
+      syntaxia: { type: Number, default: 0 },
+      quantum: { type: Number, default: 0 },
+      galactic: { type: Number, default: 0 },
+    },
+
+    currentPlanet: {
+      planetId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Planet',
+      },
+      currentStation: {
+        type: Number,
+        default: 1,
+      },
+      completedStations: [
+        {
+          type: Number,
+        },
+      ],
+    },
+
+    planetProgress: [
+      {
+        planetId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Planet',
+        },
+        isUnlocked: {
+          type: Boolean,
+          default: false,
+        },
+        isCompleted: {
+          type: Boolean,
+          default: false,
+        },
+        totalXPEarned: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
   },
-  completed: {
-    type: Boolean,
-    default: false
-  },
-  attempts: {
-    type: Number,
-    default: 0
-  },
-  lastAttemptAt: {
-    type: Date
-  },
-  bestTime: {
-    type: Number  // in seconds
-  }
+  { timestamps: true }
+);
+
+// Check if model is already registered, and only register if it isn't
+const User = models.User || model<IUserDocument, IUserModel>('User', UserSchema);
+
+UserSchema.static('findByEmail', function (email: string) {
+  return this.findOne({ email });
 });
 
-const PlanetProgressSchema = new Schema({
-  planetId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Planet',
-    required: true
-  },
-  currentStation: {
-    type: Number,
-    default: 1,
-    min: 1,
-    max: 10
-  },
-  stationProgress: [StationProgressSchema],
-  currency: {
-    type: Number,
-    default: 0
+UserSchema.methods.addCurrency = async function (
+  type: keyof Currency,
+  amount: number,
+): Promise<number> {
+  this.totalCurrency[type] += amount;
+  await this.save();
+  return this.totalCurrency[type];
+};
+
+UserSchema.methods.completeStation = async function (
+  planetId: Types.ObjectId,
+  stationNumber: number,
+  earnedXP: number,
+  earnedCurrency?: { type: keyof Currency; amount: number },
+): Promise<void> {
+  if (!this.currentPlanet.completedStations.includes(stationNumber)) {
+    this.currentPlanet.completedStations.push(stationNumber);
   }
-});
 
-const UserSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  planetProgress: [PlanetProgressSchema],
-  xp: {
-    type: Number,
-    default: 0
-  },
-  level: { // should be tied to station
-    type: Number,
-    default: 1
-  },
-  totalCurrency: {
-    lunar: { type: Number, default: 0 },
-    venus: { type: Number, default: 0 },
-    saturn: { type: Number, default: 0 }
+  const planetProgress = this.planetProgress.find(
+    (p: {
+      planetId: Types.ObjectId;
+      isUnlocked: boolean;
+      isCompleted: boolean;
+      totalXPEarned: number;
+    }) => p.planetId.equals(planetId),
+  );
+
+  if (planetProgress) {
+    planetProgress.totalXPEarned += earnedXP;
   }
-}, {
-  timestamps: true
-});
 
-// Indexes for frequent queries
-UserSchema.index({ 'planetProgress.planetId': 1 });
-UserSchema.index({ username: 1 });
-UserSchema.index({ email: 1 });
+  await this.addXP(earnedXP);
 
-export const User = model('User', UserSchema);
+  if (earnedCurrency) {
+    await this.addCurrency(earnedCurrency.type, earnedCurrency.amount);
+  }
+
+  await this.save();
+};
+
+export { User };

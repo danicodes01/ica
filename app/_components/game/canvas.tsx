@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { GameState, GameColors, GameArea } from '../../types/game';
-import { Station } from '../../types/station';
-import { getGameStations } from '../../_data/stations';
+import { Planet } from '../../types/planet';
+import { getGamePlanets } from '../../_data/planets';
 import IntroCrawl from './intro-crawl';
 
 
-import { drawMoon, drawSaturn, drawVenus, drawQuantumCore } from './utils/drawStations';
+import { PlanetRenderer } from './utils/planetRenderer';
 
 // constants
 const COLORS: GameColors = {
@@ -31,8 +31,8 @@ export default function GameCanvas({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [keys, setKeys] = useState<Set<string>>(new Set());
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [hoveredStation, setHoveredStation] = useState<Station | null>(null);
-  const [stations, setStations] = useState<Station[]>([]);
+  const [hoveredPlanet, sethoveredPlanet] = useState<Planet | null>(null);
+  const [planets, setplanets] = useState<Planet[]>([]);
   const [showIntro, setShowIntro] = useState(true);
   // Initialize game state using the GameState interface
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(
@@ -45,10 +45,10 @@ export default function GameCanvas({
     isPaused: false,
   });
 
-  // Update stations when dimensions change
+  // Update planets when dimensions change
   useEffect(() => {
     if (dimensions.width && dimensions.height) {
-      setStations(getGameStations(dimensions.width, dimensions.height));
+      setplanets(getGamePlanets(dimensions.width, dimensions.height));
     }
   }, [dimensions.width, dimensions.height]);
 
@@ -150,17 +150,17 @@ export default function GameCanvas({
     }));
   };
 
-  const drawStationLabel = (
+  const drawPlanetLabel = (
     ctx: CanvasRenderingContext2D,
-    station: Station,
+    planet: Planet,
     isHovered: boolean,
   ): void => {
-    const { x, y, radius } = station.position;
+    const { x, y, radius } = planet.position;
 
     ctx.save();
     // Set the font to Press Start 2P
     ctx.font = `${isHovered ? '7.5px' : '9px'} 'Press Start 2P'`;
-    const titlewords = station.name.split(' ');
+    const titlewords = planet.name.split(' ');
     const halfTitle = Math.ceil(titlewords.length / 2)
 
     const lineA = titlewords.slice(0, halfTitle).join(" ");
@@ -170,14 +170,14 @@ export default function GameCanvas({
     ctx.textAlign = 'center';
     ctx.fillStyle = isHovered ? COLORS.accent : COLORS.foreground;
 
-    // Draw the station name
+    // Draw the planet name
     ctx.fillText(lineA, x, y - radius - 30);
     ctx.fillText(lineB, x, y - radius - 20);
     // Draw description if hovered
     if (isHovered) {
       ctx.font = '2px Press Start 2P';
 
-      const words = station.description.split(' ');
+      const words = planet.description.split(' ');
       const halfLength = Math.ceil(words.length / 2);
 
       const line1 = words.slice(0, halfLength).join(' ');
@@ -240,91 +240,67 @@ export default function GameCanvas({
       ctx.fill();
     };
 
-    const isNearStation = (
+    const isNearPlanet = (
       playerX: number,
       playerY: number,
-      station: Station,
+      planet: Planet,
     ): boolean => {
-      const dx = playerX - station.position.x;
-      const dy = playerY - station.position.y;
+      const dx = playerX - planet.position.x;
+      const dy = playerY - planet.position.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      return distance < station.position.radius + 30;
+      return distance < planet.position.radius + 30;
     };
 
-    const checkStationInteractions = (): void => {
+    const checkPlanetInteractions = (): void => {
       const playerX = gameState.playerPosition.x;
       const playerY = gameState.playerPosition.y;
 
-      for (const station of stations) {
-        if (isNearStation(playerX, playerY, station)) {
-          setHoveredStation(station);
+      for (const planet of planets) {
+        if (isNearPlanet(playerX, playerY, planet)) {
+          sethoveredPlanet(planet);
           return;
         }
       }
 
-      if (hoveredStation) {
-        setHoveredStation(null);
+      if (hoveredPlanet) {
+        sethoveredPlanet(null);
       }
     };
 
-    const drawStation = (
-      ctx: CanvasRenderingContext2D,
-      station: Station,
-    ): void => {
-      const { x, y, radius } = station.position;
-      const isHovered = hoveredStation?.id === station.id;
+    const drawPlanet = (
+  ctx: CanvasRenderingContext2D,
+  planet: Planet,
+): void => {
+  const { x, y, radius } = planet.position;
+  const isHovered = hoveredPlanet?.id === planet.id;
 
-      switch (station.id) {
-        case 'mission-control':
-          drawMoon(
-            ctx,
-            x,
-            y,
-            radius,
-            station.isUnlocked,
-            isHovered,
-            COLORS.accent,
-          );
-          break;
-        case 'frontend-corps':
-          drawVenus(
-            ctx,
-            x,
-            y,
-            radius,
-            station.isUnlocked,
-            isHovered,
-            COLORS.accent,
-          );
-          break;
-        case 'systems-division':
-          drawSaturn(
-            ctx,
-            x,
-            y,
-            radius,
-            station.isUnlocked,
-            isHovered,
-            COLORS.accent,
-          );
-          break;
-          case 'quantum-core':
-            drawQuantumCore(
-              ctx,
-              x,
-              y,
-              radius,
-              station.isUnlocked,
-              isHovered,
-              COLORS.accent,
-              
-            )
-      }
+  const drawOptions = {
+    ctx,
+    x,
+    y,
+    radius,
+    isUnlocked: planet.isUnlocked,
+    isHovered,
+    accentColor: COLORS.accent,
+  };
 
-      // Draw the label after drawing the station
-      drawStationLabel(ctx, station, isHovered);
-    };
+  switch (planet.id) {
+    case 'mission-control':
+      PlanetRenderer.drawMoon(drawOptions);
+      break;
+    case 'frontend-corps':
+      PlanetRenderer.drawChromanova(drawOptions);
+      break;
+    case 'systems-division':
+      PlanetRenderer.drawSyntaxia(drawOptions);
+      break;
+    case 'quantum-core':
+      PlanetRenderer.drawQuantumCore(drawOptions);
+      break;
+  }
 
+  drawPlanetLabel(ctx, planet, isHovered);
+};
     const renderGame = (): void => {
       // Clear canvas with background
       ctx.fillStyle = COLORS.background;
@@ -344,9 +320,9 @@ export default function GameCanvas({
         drawStar(x, y, size, alpha);
       }
 
-      // Draw stations
-      stations.forEach(station => drawStation(ctx, station));
-      checkStationInteractions();
+      // Draw planets
+      planets.forEach(planet => drawPlanet(ctx, planet));
+      checkPlanetInteractions();
 
       // Draw UFO with glow effect
       ctx.shadowColor = COLORS.accent;
@@ -400,8 +376,8 @@ export default function GameCanvas({
     gameState.playerPosition,
     gameState.isPaused,
     dimensions,
-    hoveredStation,
-    stations,
+    hoveredPlanet,
+    planets,
   ]);
 
   return (

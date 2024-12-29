@@ -3,8 +3,9 @@ import { Schema, model, models, Document } from 'mongoose';
 // Interface for exchange rates
 interface ExchangeRates {
   lunar: number;
-  venus: number;
-  saturn: number;
+  chroanova: number;
+  sytaxia: number;
+  quantum: number;
   [key: string]: number;  // For future currency additions
 }
 
@@ -47,7 +48,7 @@ const SpecialEventSchema = new Schema({
   },
   affectedCurrencies: [{
     type: String,
-    enum: ['lunar', 'venus', 'saturn', 'galactic']
+    enum: ['lunar', 'chromanova', 'syntaxia', 'quantum', 'galactic']
   }],
   startDate: {
     type: Date,
@@ -72,16 +73,27 @@ const CurrencyExchangeSchema = new Schema({
       required: true,
       min: 0.000001  // Prevent division by zero issues
     },
-    venus: {
+    chromanova: {
       type: Number,
       required: true,
       min: 0.000001
     },
-    saturn: {
+    syntaxia: {
       type: Number,
       required: true,
       min: 0.000001
-    }
+    },
+    quantum: {
+      type: Number,
+      required: true,
+      min: 0.000001
+    },
+    galactic: {
+      type: Number,
+      required: true,
+      min: 0.000001
+    },
+
   },
   effectiveFrom: {
     type: Date,

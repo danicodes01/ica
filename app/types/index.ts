@@ -1,8 +1,8 @@
 export * from './game';
 export * from './planet';
+export * from './user';
 export * from './station';
 export * from './canvasDrawings';
-export * from './challenges';
 export * from './canvas'
 
 // Common types
