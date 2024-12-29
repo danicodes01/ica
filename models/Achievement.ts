@@ -55,7 +55,7 @@ const AchievementSchema = new Schema({
       type: {
         type: String,
         required: true,
-        enum: ['lunar', 'venus', 'saturn', 'galactic']
+        enum: ['lunar', 'chromanova', 'syntaxia', 'galactic', 'quantum']
       },
       amount: {
         type: Number,

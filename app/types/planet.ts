@@ -1,25 +1,49 @@
-export type PlanetType = 'moon' | 'venus' | 'saturn';
+// planet.ts
+import { GameArea } from './game';
+import { ChallengeDifficulty } from './challenges';
 
-export interface PlanetVisuals {
-  baseColor: string;
-  accentColor: string;
-  radius: number;
-  special?: {
-    rings?: boolean;    // For Saturn
-    craters?: boolean;  // For Moon
-    swirls?: boolean;   // For Venus
-  }
+export enum ModuleStatus {
+  LOCKED = 'LOCKED',
+  AVAILABLE = 'AVAILABLE',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
 }
 
-export interface PlanetCoordinates {
+export type PlanetType = 'moon' | 'chromanova' | 'syntaxia' | 'quantumCore';  // Define PlanetType
+
+
+export interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: ChallengeDifficulty;
+  challenges: string[];
+  xpReward: number;
+  completionStatus: ModuleStatus;
+}
+
+export interface LearningPath {
+  title: string;
+  description: string;
+  modules: Challenge[];
+  totalXP: number;
+}
+
+export interface Position {
   x: number;
   y: number;
-  z: number;
+  radius: number;
 }
 
-export interface PlanetTheme {
-  primaryColor: string;
-  secondaryColor: string;
-  backgroundColor: string;
-  textColor: string;
+export interface Planet {
+  id: string;
+  name: string;
+  type: PlanetType; 
+  area: GameArea;
+  position: Position;
+  icon: string;
+  description: string;
+  learningPath: LearningPath;
+  isUnlocked: boolean;
+  requiredStations?: string[]; // Optional field for dependencies
 }
