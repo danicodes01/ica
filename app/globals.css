@@ -161,10 +161,10 @@ a {
 }
 
 .starwars-line.fade-out {
-  animation: fadeOut 5s ease-in forwards; /* to match LINE_FADE_DURATION */
+  animation: fadeOut 6s ease-in forwards; /* This matches LINE_FADE_DURATION */
 }
 
-
+/* Make sure fade-mask transitions smoothly */
 .fade-mask {
   position: fixed;
   top: 0;
@@ -179,15 +179,13 @@ a {
   );
   pointer-events: none;
   z-index: 1;
-  opacity: 0;
-  transition: opacity 0s ease;
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.6s ease; /* Smooth transition for opacity */
 }
 
-
-
-/* Add an active state for the intro */
+/* When the intro is active, fade in the fade-mask */
 .fade-mask.active {
-  opacity: 1; /* Only visible during intro */
+  opacity: 1;
 }
 
 
