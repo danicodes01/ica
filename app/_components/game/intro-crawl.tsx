@@ -67,7 +67,7 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
       // Set a 60-second timeout to deactivate the fade-mask
       const timer = setTimeout(() => {
         setHideFade(true);
-      }, 58999); // 60 seconds
+      }, 60001); // 60 seconds
 
       return () => clearTimeout(timer);
     }
