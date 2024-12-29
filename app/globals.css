@@ -33,13 +33,11 @@
   }
 }
 
-
-
 html {
   font-family: 'Press Start 2P', serif;
-  height: 100%; /* Make sure the body and html take up full height */
+  height: 100%;
   margin: 0;
-  overflow: hidden; /* Disable scrolling */
+  overflow: hidden;
 }
 
 * {
@@ -64,66 +62,16 @@ html {
 
 body {
   color: var(--foreground);
-  background: linear-gradient(to bottom, transparent, var(--background))
-  var(--background);
+  background: linear-gradient(to bottom, transparent, var(--background)) var(--background);
   margin: 0;
-  --muted-text-rgb: 176, 176, 176;
-  --highlight-gradient: linear-gradient(
-    to right,
-    #e61e4d 0%,
-    #e31c5f 50%,
-    #d70466 100%
-  );
-  --violet-rgb: 160, 122, 170;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-a {
-  text-decoration: none;
-}
-
-.header-background {
-  position: absolute;
-  width: 100%;
-  height: 320px;
-  top: 0;
-  left: 0;
-  z-index: 10;
-}
-
-.not-found,
-.error {
-  margin-top: 5rem;
-  text-align: center;
-}
-
-.not-found h1,
-.error h1 {
-  font-size: 5rem;
-  margin: 0px;
-  font-weight: 900;
-  text-transform: uppercase;
-  background-size: cover;
-  background-position: center;
-  font-family: 'Press Start 2P', serif;
-}
-
-.not-found p,
-.error p {
-  font-size: 1.5rem;
-  font-weight: 500;
-}
 .starwars-container {
   position: fixed;
   inset: 0;
   height: 100vh;
   overflow: hidden;
-  perspective: 2000px;
+  perspective: 1200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -134,22 +82,23 @@ a {
   margin: auto;
   position: absolute;
   left: 50%;
-  top: 100%;
+  top: 66%;
   transform: translateX(-50%) rotateX(20deg);
 }
 
 .starwars-content {
   color: #FFD700;
-  font-size: clamp(14px, 1.5vw, 20px); /* Limit maximum size */
+  font-size: clamp(14px, 1.5vw, 20px);
   text-align: justify;
   padding: 0 20%;
 }
 
 @keyframes fadeOut {
-  from {
+  0% {
     opacity: 1;
   }
-  to {
+  
+  100% {
     opacity: 0;
   }
 }
@@ -161,33 +110,25 @@ a {
 }
 
 .starwars-line.fade-out {
-  animation: fadeOut 6s ease-in forwards; /* This matches LINE_FADE_DURATION */
+  animation: fadeOut 6s ease-in forwards;
 }
 
-/* Make sure fade-mask transitions smoothly */
 .fade-mask {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    to top,
-    transparent 0%,
-    transparent 20%,
-    black 100%
-  );
+  background: linear-gradient(to top, transparent 0%, transparent 20%, black 100%);
   pointer-events: none;
   z-index: 1;
-  opacity: 0; /* Start hidden */
-  transition: opacity 0.6s ease; /* Smooth transition for opacity */
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
-/* When the intro is active, fade in the fade-mask */
 .fade-mask.active {
   opacity: 1;
 }
-
 
 @keyframes crawl {
   0% {
@@ -200,4 +141,11 @@ a {
   }
 }
 
-
+/* NEW STYLES FOR FIRST LINE */
+.starwars-line:first-child {
+  font-size: 3rem; /* Larger font for first line */
+  text-align: center; /* Center the first line */
+  margin-top: 50px; /* Extra spacing before the first line */
+  margin-bottom: 80px; /* Extra spacing after the first line */
+  line-height: 2; /* Larger line height for better spacing */
+}
