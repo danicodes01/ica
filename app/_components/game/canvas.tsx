@@ -5,8 +5,7 @@ import { GameState, GameColors, GameArea } from '../../types/game';
 import { Planet } from '../../types/planet';
 import { getGamePlanets } from '../../_data/planets';
 import IntroCrawl from './intro-crawl';
-
-
+import { GameRenderer } from './utils/gameRenderer';
 import { PlanetRenderer } from './utils/planetRenderer';
 
 // constants
@@ -224,49 +223,22 @@ export default function GameCanvas({
       }
     };
 
-    const drawStar = (
-      x: number,
-      y: number,
-      size: number,
-      alpha: number,
-    ): void => {
-      const gradient = ctx.createRadialGradient(x, y, 0, x, y, size);
-      const starColor = `rgba(235, 235, 245, ${alpha})`;
-      gradient.addColorStop(0, starColor);
-      gradient.addColorStop(1, 'transparent');
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fill();
-    };
-
-    const isNearPlanet = (
-      playerX: number,
-      playerY: number,
-      planet: Planet,
-    ): boolean => {
-      const dx = playerX - planet.position.x;
-      const dy = playerY - planet.position.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      return distance < planet.position.radius + 30;
-    };
-
     const checkPlanetInteractions = (): void => {
       const playerX = gameState.playerPosition.x;
       const playerY = gameState.playerPosition.y;
-
+    
       for (const planet of planets) {
-        if (isNearPlanet(playerX, playerY, planet)) {
+        if (GameRenderer.isNearPlanet(playerX, playerY, planet)) {
           sethoveredPlanet(planet);
           return;
         }
       }
-
+    
       if (hoveredPlanet) {
         sethoveredPlanet(null);
       }
     };
-
+    
     const drawPlanet = (
   ctx: CanvasRenderingContext2D,
   planet: Planet,
@@ -306,59 +278,20 @@ export default function GameCanvas({
       ctx.fillStyle = COLORS.background;
       ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 
-      // Calculate star count based on screen size
-      const starCount = Math.floor(
-        (dimensions.width * dimensions.height) / 6000,
-      );
-
-      // Draw stars with different sizes and opacities
-      for (let i = 0; i < starCount; i++) {
-        const x = Math.random() * dimensions.width;
-        const y = Math.random() * dimensions.height;
-        const size = Math.random() * 2 + 0.5;
-        const alpha = Math.random() * 0.5 + 0.3;
-        drawStar(x, y, size, alpha);
-      }
+      GameRenderer.drawStarfield(ctx, dimensions.width, dimensions.height, COLORS);
 
       // Draw planets
       planets.forEach(planet => drawPlanet(ctx, planet));
       checkPlanetInteractions();
 
       // Draw UFO with glow effect
-      ctx.shadowColor = COLORS.accent;
-      ctx.shadowBlur = 15;
-      ctx.font = '30px Arial';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillText(
-        '🛸',
-        gameState.playerPosition.x - 14,
-        gameState.playerPosition.y + 10,
-      );
-      ctx.shadowBlur = 0;
-
-      // Draw movement trail
-      if (keys.size > 0) {
-        const trailGradient = ctx.createRadialGradient(
-          gameState.playerPosition.x,
-          gameState.playerPosition.y,
-          0,
-          gameState.playerPosition.x,
-          gameState.playerPosition.y,
-          25,
-        );
-        trailGradient.addColorStop(0, COLORS.glow);
-        trailGradient.addColorStop(1, 'transparent');
-        ctx.fillStyle = trailGradient;
-        ctx.beginPath();
-        ctx.arc(
-          gameState.playerPosition.x,
-          gameState.playerPosition.y + 5,
-          25,
-          0,
-          Math.PI * 2,
-        );
-        ctx.fill();
-      }
+      GameRenderer.drawUFO({
+        ctx,
+        x: gameState.playerPosition.x,
+        y: gameState.playerPosition.y,
+        colors: COLORS,
+        isMoving: keys.size > 0
+      });
     };
 
     // Create the game loop
