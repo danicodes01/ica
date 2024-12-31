@@ -54,6 +54,7 @@ const StationSchema = new Schema(
       difficulty: { type: String, required: true },
       initialCode: { type: String, required: true },
       solution: { type: String, required: true },
+      examples: { type: String },
       testCases: [{
         input: { type: String, required: true },
         expectedOutput: { type: String, required: true }
