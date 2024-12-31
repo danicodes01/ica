@@ -71,6 +71,7 @@ export default function CodeEditor({
   const handleLanguageChange = (newLanguage: SupportedLanguage) => {
     setLanguage(newLanguage);
     setValue(CODE_SNIPPETS[newLanguage]);
+    console.log(value)
   };
 
   const beforeMount = (monaco: Monaco) => {
