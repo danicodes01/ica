@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm install @monaco-editor/react --legacy-peer-deps && npm run build",
+    "build": "npm install @monaco-editor/react --legacy-peer-deps && next build",
     "start": "next start",
-    "lint": "next lint",
-    "preinstall": "npm install @monaco-editor/react --legacy-peer-deps"
+    "lint": "next lint"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
