@@ -117,23 +117,23 @@ export default function StationView({ stationId }: StationViewProps) {
     switch (phase) {
       case 'entrance':
         return (
-          <div className='fixed inset-0 flex items-center justify-center'>
+          <div className='fixed inset-0 flex items-center justify-center bg-black/80'>
             <div
-              className={`transition-opacity duration-1000 
-                ${isEntering ? 'opacity-0' : 'opacity-100'}`}
+              className={`transition-opacity duration-1000 w-full max-w-sm px-4 py-8
+      ${isEntering ? 'opacity-0' : 'opacity-100'}`}
             >
-              <h2 className='text-2xl font-ps2p text-[color:var(--game-text)] mb-4'>
+              <h2 className='text-xl sm:text-2xl font-ps2p text-[color:var(--game-text)] mb-6 text-center'>
                 {station.name}
               </h2>
               <div className='bg-black/50 p-6 rounded-lg'>
-                <div className='mb-4'>
-                  <p className='font-ps2p text-white'>
+                <div className='mb-8'>
+                  <p className='font-ps2p text-white text-lg leading-relaxed'>
                     {station.npc.dialogue.greeting}
                   </p>
                 </div>
                 <button
                   onClick={() => setPhase('challenge')}
-                  className='bg-purple-600 hover:bg-purple-700 text-white font-ps2p py-2 px-4 rounded'
+                  className='bg-blue-400 hover:bg-blue-500 text-white font-ps2p py-2 px-4 rounded'
                 >
                   Begin Challenge
                 </button>
