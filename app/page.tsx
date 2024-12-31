@@ -45,6 +45,7 @@ export default function Home() {
         className="fixed bottom-3 right-6 text-xs border border-solid border-black rounded text-blue-400 z-50"
         onClick={async () => {
           console.log('Sign out clicked');
+          sessionStorage.clear();
           await signOut({ redirect: false });
           console.log('Signed out, redirecting...');
           router.replace("/login");

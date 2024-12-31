@@ -16,6 +16,20 @@ const PlanetSchema = new Schema(
       y: { type: Number, required: true },
       radius: { type: Number, required: true },
     },
+    progress: {
+      currentCode: { type: String },
+      attempts: [{ 
+        timestamp: { type: Date },
+        code: { type: String },
+        passed: { type: Boolean },
+        earnedXP: { type: Number }
+      }],
+      bestAttempt: {
+        attemptNumber: { type: Number },
+        earnedXP: { type: Number }
+      },
+      isComplete: { type: Boolean, default: false }
+    },
     learningPath: {
       title: { type: String, required: true },
       description: { type: String, required: true },
