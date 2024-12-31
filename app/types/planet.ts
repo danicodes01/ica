@@ -4,6 +4,7 @@ import { ChallengeDifficulty } from './challenges';
 
 export enum ModuleStatus {
   LOCKED = 'LOCKED',
+  UNLOCKED = 'UNLOCKED',
   AVAILABLE = 'AVAILABLE',
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
@@ -12,7 +13,7 @@ export enum ModuleStatus {
 export type PlanetType = 'moon' | 'chromanova' | 'syntaxia' | 'quantumCore';  // Define PlanetType
 
 
-export interface Challenge {
+export interface PlanetChallenge {
   id: string;
   title: string;
   description: string;
@@ -25,7 +26,7 @@ export interface Challenge {
 export interface LearningPath {
   title: string;
   description: string;
-  modules: Challenge[];
+  modules: PlanetChallenge[];
   totalXP: number;
 }
 
