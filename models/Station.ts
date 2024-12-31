@@ -117,16 +117,14 @@ StationSchema.methods.calculateXP = function(this: IStationDocument, attemptNumb
 StationSchema.methods.isAccessible = async function(this: IStationDocument): Promise<boolean> {
   if (this.stationNumber === 1) return true;
   
-  // Add proper typing here
   const previousStation = await this.model('Station').findOne({
     planetId: this.planetId,
     stationNumber: this.stationNumber - 1
-  }).lean() as IStationDocument | null;  // Add explicit typing
+  }).lean() as IStationDocument | null;  
   
   return Boolean(previousStation?.progress.isComplete);
 };
 
-// Static method to get station progress
 StationSchema.static('getProgress', async function(
   planetId: string
 ): Promise<Array<{
@@ -154,5 +152,4 @@ StationSchema.static('getProgress', async function(
   })));
 });
 
-// Export the model
 export const Station = model<IStationDocument, IStationModel>('Station', StationSchema);

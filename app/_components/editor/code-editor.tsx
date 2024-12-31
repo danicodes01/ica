@@ -219,7 +219,6 @@ export default function CodeEditor({
               break;
       
               case 'php':
-                // Improved PHP simulation
                 const phpLines = codeToExecute.split('\n');
                 const phpVariables: { [key: string]: string } = {};
                 
@@ -268,6 +267,7 @@ export default function CodeEditor({
         setIsExecuting(false);
       }
     };
+
   return (
     <div className={styles.container}>
        <LanguageSelector language={language} onSelect={handleLanguageChange} />
@@ -276,7 +276,7 @@ export default function CodeEditor({
           <Editor
             height={height}
             language={language}
-            value={value}
+            value='// Your solution here'
             onChange={handleEditorChange}
             beforeMount={beforeMount}
             theme='claude'
@@ -293,7 +293,7 @@ export default function CodeEditor({
                   lineNumbers: 'on',
                   renderLineHighlight: 'none',
                   matchBrackets: 'always',
-                  cursorStyle: 'block',
+                  cursorStyle: 'line',
                   cursorBlinking: 'smooth',
                   formatOnPaste: true,
                   roundedSelection: false,
@@ -301,10 +301,12 @@ export default function CodeEditor({
                   tabSize: 2,
                   autoIndent: 'advanced',
                   readOnly,
+                  accessibilitySupport: 'auto',
                   guides: {
                     indentation: true,
                     bracketPairs: true,
                   }
+                  
                 }}
           />
         </div>

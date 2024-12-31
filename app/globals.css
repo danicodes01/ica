@@ -67,6 +67,18 @@ body {
   margin: 0;
 }
 
+/* Adjust width and height of the keyboard shortcut picker */
+.monaco-keybinding-picker {
+  width: 300px !important; /* Set the desired width */
+  height: auto !important; /* Adjust height if needed */
+}
+
+/* Optionally, adjust the font size or padding for smaller elements */
+.monaco-keybinding-picker .monaco-list {
+  font-size: 12px; /* Adjust font size */
+  padding: 5px;    /* Adjust padding */
+}
+
 .starwars-container {
   position: fixed;
   inset: 0;
