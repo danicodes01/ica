@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm install @monaco-editor/react --legacy-peer-deps && npm run build",
     "start": "next start",
     "lint": "next lint",
     "preinstall": "npm install @monaco-editor/react --legacy-peer-deps"
