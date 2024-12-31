@@ -337,6 +337,7 @@ export default function GameCanvas({
   }, [dimensions.width, dimensions.height]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const updateDimensions = (): void => {
       if (containerRef.current && canvasRef.current) {
         const width = window.innerWidth;
