@@ -38,7 +38,7 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     <div className="h-screen bg-black flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-4">
         <div className="text-center">
-          <h1 className="text-1xl font-bold text-white">Welcome to the intergalactic space academy</h1>
+          <h1 className="text-1xl font-bold text-white">Welcome to the intergalactic code academy</h1>
           <span className="text-xl inline-block my-1">🛸</span>
         </div>
 
