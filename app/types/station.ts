@@ -32,6 +32,7 @@ export interface StationChallenge {
   difficulty: string;
   initialCode: string;
   solution: string;
+  examples?: string;
   testCases: Array<{
     input: string;
     expectedOutput: string;
