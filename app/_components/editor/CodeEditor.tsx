@@ -3,6 +3,7 @@
 import Editor from '@monaco-editor/react';
 import { useState, useEffect } from 'react';
 import type { Monaco } from '@monaco-editor/react';
+import type { editor } from 'monaco-editor'
 import styles from './CodeEditor.module.css';
 
 interface CodeEditorProps {
@@ -14,7 +15,7 @@ interface CodeEditorProps {
 }
 
 // Define Monokai theme
-const claudeTheme = {
+const claudeTheme: editor.IStandaloneThemeData = {
   base: 'vs-dark',
   inherit: true,
   rules: [
