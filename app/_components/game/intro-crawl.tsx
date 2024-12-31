@@ -22,11 +22,11 @@ const INTRO_TEXT = [
   'weave together their powers. You are',
   'that chosen one. As darkness corrupts',
   'server clusters, you must master each',
-  'planet\'s arts. Time is short. Only the',
+  "planet's arts. Time is short. Only the",
   'Luminous Protocol can restore light to',
   'the universe. May your functions be pure,',
   'your algorithms true. And may the Source',
-  'be with you always...'
+  'be with you always...',
 ] as const;
 
 const SCROLL_SPEED = 33;
@@ -40,7 +40,7 @@ const DURATION_BREAKPOINTS: ScreenBreakpoint[] = [
   { maxWidth: 400, duration: 61000 },
   { maxWidth: 600, duration: 45000 },
   { maxWidth: 800, duration: 40000 },
-  { maxWidth: 1000, duration: 36000 }, 
+  { maxWidth: 1000, duration: 36000 },
   { maxWidth: 1440, duration: 37000 },
 ];
 
@@ -50,8 +50,8 @@ function calculateFadeDuration(width: number, height: number): number {
   const baseDuration = breakpoint?.duration || 39000;
 
   // Adjust for height - taller screens need more time
-  const heightFactor = Math.min(Math.max(height / 600, 0.95), 1.05); 
-  
+  const heightFactor = Math.min(Math.max(height / 600, 0.95), 1.05);
+
   return Math.round(baseDuration * heightFactor);
 }
 
@@ -65,28 +65,37 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
   const fadeMaskRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!contentRef.current || !containerRef.current || !fadeMaskRef.current) return;
+    if (typeof window === 'undefined') return;
+    
+    if (!contentRef.current || !containerRef.current || !fadeMaskRef.current)
+      return;
 
     const content = contentRef.current;
     const container = containerRef.current;
     const fadeMask = fadeMaskRef.current;
-    
+
     // Calculate dimensions and durations
     const contentHeight = content.offsetHeight;
     const containerHeight = container.offsetHeight;
     const totalScrollDistance = containerHeight + contentHeight;
     const duration = totalScrollDistance / SCROLL_SPEED;
-    
+
     // Calculate fade duration based on screen size
-    const fadeDuration = calculateFadeDuration(window.innerWidth, window.innerHeight);
-    
+    const fadeDuration = calculateFadeDuration(
+      window.innerWidth,
+      window.innerHeight,
+    );
+
     // Set end position CSS variable
     const endPosition = -contentHeight - containerHeight;
-    document.documentElement.style.setProperty('--end-position', `${endPosition}px`);
-    
+    document.documentElement.style.setProperty(
+      '--end-position',
+      `${endPosition}px`,
+    );
+
     // Start animation
     content.parentElement!.style.animation = `${styles.crawl} ${duration}s linear forwards`;
-    
+
     // Update fade mask class
     fadeMask.className = styles.fadeMaskActive;
 

@@ -5,7 +5,9 @@ import { useStationsStore } from '@/app/store/stations';
 import { useRouter } from 'next/navigation';
 import { IStation, StationProgress } from '@/app/types/station';
 import { ModuleStatus } from '@/app/types/planet';
-import CodeEditor from '../../editor/CodeEditor';
+import CodeEditor from '../../editor/code-editor';
+import { CODE_SNIPPETS } from '@/app/constants/editor';
+import { SupportedLanguage } from '@/app/types/editor';
 
 interface StationViewProps {
   stationId: string;
@@ -21,8 +23,8 @@ export default function StationView({ stationId }: StationViewProps) {
     'entrance',
   );
   const [isEntering, setIsEntering] = useState(true);
-  const [language, setLanguage] = useState<string>('javascript'); // Default language
-  
+  const [language, setLanguage] = useState<SupportedLanguage>('typescript');
+  // const [defaultLanguage, setDefaultLanguage] = useState<string>('typescript'); // Default language
 
   useEffect(() => {
     let entranceTimeout: NodeJS.Timeout;
@@ -75,8 +77,7 @@ export default function StationView({ stationId }: StationViewProps) {
     };
   }, [stationId, router]);
 
-  const handleLanguageChange = (newLanguage: string) => {
-    console.log('language changed')
+  const handleLanguageChange = (newLanguage: SupportedLanguage) => {
     setLanguage(newLanguage);
   };
 
@@ -171,7 +172,9 @@ export default function StationView({ stationId }: StationViewProps) {
               <div className='bg-black/50 p-6 rounded-lg'>
                 <CodeEditor
                   initialCode={station.challenge.initialCode}
-                  language={language}
+                  defaultLanguage={language}
+                  defaultValue={CODE_SNIPPETS[language]}
+                  onLanguageChange={handleLanguageChange}
                   onCodeSubmit={async code => {
                     // Handle code submission
                     handleChallengeComplete({
@@ -184,28 +187,10 @@ export default function StationView({ stationId }: StationViewProps) {
                 />
               </div>
 
-                {/* Language Switcher */}
-                <div className="flex justify-end mt-4">
-                <button
-                  onClick={() => handleLanguageChange('javascript')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
-                >
-                  JavaScript
-                </button>
-                <button
-                  onClick={() => handleLanguageChange('typescript')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
-                >
-                  TypeScript
-                </button>
-                <button
-                  onClick={() => handleLanguageChange('python')}
-             
-                  className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded ml-2"
-                >
-                  Python
-                </button>
-              </div>
+              {/* <LanguageSelector
+                language={defaultLanguage}
+                onSelect={handleLanguageChange}
+              /> */}
 
               {/* Navigation Buttons */}
               <div className='flex justify-between mt-4'>
